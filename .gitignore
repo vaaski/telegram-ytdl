@@ -1,0 +1,4 @@
+.env
+node_modules
+youtube-dl
+youtube-dl.exe

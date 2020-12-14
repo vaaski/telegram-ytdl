@@ -1,0 +1,8 @@
+{
+  "watch": ["src"],
+  "ext": "ts,json",
+  "exec": "node --inspect -r ts-node/register -r dotenv/config ./src/index.ts",
+  "events": {
+    "start": "node -e console.clear()"
+  }
+}
