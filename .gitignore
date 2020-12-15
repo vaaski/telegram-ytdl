@@ -2,3 +2,4 @@
 node_modules
 youtube-dl
 youtube-dl.exe
+src/*.js

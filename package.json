@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo 'no tests'",
-    "start": "node -r ts-node/register -r dotenv/config ./src/index.ts",
+    "start": "tsc && node -r dotenv/config ./src/index.js",
     "commit": "cz -S",
     "dev": "nodemon"
   },
