@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo 'no tests'",
     "start": "node -r ts-node/register -r dotenv/config ./src/index.ts",
+    "commit": "cz -S",
     "dev": "nodemon"
   },
   "repository": {
@@ -36,6 +37,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "execa": "^5.0.0",
-    "telegraf": "^3.38.0"
+    "telegraf": "^3.38.0",
+    "ytdl-core": "^4.1.5"
   }
 }
