@@ -1,17 +1,24 @@
 import { Telegraf, Markup } from "telegraf"
 import strings from "./strings"
 import { FormatsEntity } from "./youtube-dl-types"
-import * as ytdl from "ytdl-core"
+import type * as ytdl from "ytdl-core"
 import setup from "./setup"
 // import youtubeDL from "./youtube-dl"
 import ytdlCore from "./ytdl-core"
+import chalk from "chalk"
 
 !(async () => {
+  const token = process.env.BOT_TOKEN || process.argv[2]
+
+  const isDev = Boolean(process.env.DEV_LOG)
+  const log = (...t: any[]) =>
+    isDev ? console.log(...t.map((a) => (typeof a === "string" ? chalk.gray(a) : a))) : null
+
   await setup()
 
-  const tg = new Telegraf(process.env.BOT_TOKEN)
+  const tg = new Telegraf(token)
 
-  const youtubeRegex = /(?:.*?)(?:^|\/|v=)([a-z0-9_-]{11})(?:.*)?/i
+  const youtubeRegex = /(?:youtube|youtu.be)+(?:.*?)(?:^|\/|v=)([a-z0-9_-]{11})(?:.*)?/i
   const audioVideoSelector = Markup.inlineKeyboard([
     Markup.callbackButton("audio", "audio"),
     Markup.callbackButton("video", "video"),
@@ -33,17 +40,21 @@ import ytdlCore from "./ytdl-core"
 
   tg.use(async ({ message, chat, callbackQuery }, next) => {
     if (callbackQuery) return await next()
-    console.log(`[@${chat.username}](${message?.message_id}) ${message?.text}`)
+    console.log(`[@${chat?.username}](${message?.message_id}) ${message?.text}`)
     await next()
   })
 
   tg.start(({ reply, chat }) => {
-    reply(strings.start(chat.username))
+    reply(strings.start(chat?.username))
   })
 
   tg.hears(youtubeRegex, async ({ reply, message }, next) => {
     try {
-      const videoID = youtubeRegex.exec(message.text)[1]
+      if (!message || !message.text) return
+
+      let videoID: any = youtubeRegex.exec(message.text)
+      if (videoID) videoID = videoID[1]
+
       let initialReply = videoID
       if (cachedDownloads[videoID]) initialReply = cachedDownloads[videoID].title
 
@@ -53,9 +64,18 @@ import ytdlCore from "./ytdl-core"
       })
 
       if (!cachedDownloads[videoID] || cachedDownloads[videoID].expire < +Date.now()) {
+        log("not cached, downloading.")
         cachedDownloads[videoID] = { loading: true }
+        const start = +new Date()
+
         ytdlCore.getFormats(videoID).then((formats) => {
+          console.log(
+            `[@${chat.username}](${message?.message_id}) ytdl-core took ${
+              +new Date() - start
+            }ms to get video info`,
+          )
           if (initialReply === videoID && !cachedDownloads[videoID].onload) {
+            log("user didn't select format yet.")
             tg.telegram.editMessageText(
               chat.id,
               message_id,
@@ -63,9 +83,8 @@ import ytdlCore from "./ytdl-core"
               strings.formatSelection(formats.title),
               audioVideoSelector,
             )
-          }
-
-          if (typeof cachedDownloads[videoID].onload === "function") {
+          } else if (typeof cachedDownloads[videoID].onload === "function") {
+            log("user already selected format, resolving waiting promise.")
             cachedDownloads[videoID].onload(formats)
           }
 
@@ -75,9 +94,10 @@ import ytdlCore from "./ytdl-core"
 
       await next()
     } catch (err) {
-      console.log("hears err", err)
+      log("hears err", err)
     }
   })
+
 
   tg.action(
     ["video", "audio"],
@@ -86,6 +106,7 @@ import ytdlCore from "./ytdl-core"
         const type: "video" | "audio" = callbackQuery.data as "video" | "audio"
         const videoID = youtubeRegex.exec(callbackQuery.message.reply_to_message.text)[1]
         answerCbQuery(strings.downloading(type))
+        const { chat, message_id } = callbackQuery.message.reply_to_message
 
         tg.telegram.editMessageText(
           callbackQuery.message.chat.id,
@@ -101,10 +122,18 @@ import ytdlCore from "./ytdl-core"
           cachedDownloads[videoID].expire < +Date.now()
         ) {
           if (cachedDownloads[videoID]?.loading) {
+            log("video already loading, waiting..")
             await new Promise((res) => {
               cachedDownloads[videoID].onload = res
             })
-          } else cachedDownloads[videoID] = await ytdlCore.getFormats(videoID)
+            log("done waiting.")
+          } else {
+            log(
+              `[@${chat.username}](${message_id}) https://youtu.be/${videoID} not downloading, starting new dl`,
+            )
+            cachedDownloads[videoID] = await ytdlCore.getFormats(videoID)
+            log(`done downloading ${videoID}.`)
+          }
         }
 
         const dl = cachedDownloads[videoID]
@@ -142,7 +171,7 @@ import ytdlCore from "./ytdl-core"
 
         await next()
       } catch (err) {
-        console.log("action err", err)
+        log("action err", err)
       }
     },
   )

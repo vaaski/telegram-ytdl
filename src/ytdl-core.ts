@@ -2,12 +2,7 @@ import { URL } from "url"
 import * as ytdl from "ytdl-core"
 
 const ytdlCore = {
-  info: async (src: string) => {
-    const start = +new Date()
-    const info = await ytdl.getInfo(src)
-    console.log(`ytdl-core took ${+new Date() - start}ms to get video info`)
-    return info
-  },
+  info: async (src: string) => await ytdl.getInfo(src),
   filterFormats: ({ formats, videoDetails: { title } }: ytdl.videoInfo) => {
     const video = formats
       .filter(({ hasVideo, hasAudio }) => hasVideo && hasAudio)
