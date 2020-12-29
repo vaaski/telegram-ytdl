@@ -3,9 +3,10 @@ import strings from "./strings"
 import { FormatsEntity } from "./youtube-dl-types"
 import type * as ytdl from "ytdl-core"
 import setup from "./setup"
-// import youtubeDL from "./youtube-dl"
+import youtubeDL from "./youtube-dl"
 import ytdlCore from "./ytdl-core"
 import chalk from "chalk"
+import got from "got"
 
 !(async () => {
   const token = process.env.BOT_TOKEN || process.argv[2]
@@ -98,6 +99,36 @@ import chalk from "chalk"
     }
   })
 
+  tg.hears(/tiktok\.com/i, async ({ message, reply, replyWithVideo }) => {
+    const url = new URL(message.text, "https://www.tiktok.com").toString()
+    const response = await reply(strings.downloading("tiktok"))
+
+    try {
+      const info = await youtubeDL.info(url)
+      const format = info.formats[0]
+      const removeHashtags = (str) => str.replace(/#\w+/g, "").replace(/\s{2,}/g, "")
+
+      const video = got.stream(format.url, {
+        headers: { ...format.http_headers },
+      })
+
+      await replyWithVideo(
+        {
+          source: video,
+          filename: filename(removeHashtags(info.description)),
+        },
+        {
+          caption: removeHashtags(info.description),
+          reply_to_message_id: message.message_id,
+          supports_streaming: true,
+        },
+      )
+      await tg.telegram.deleteMessage(response.chat.id, response.message_id)
+    } catch (err) {
+      console.log(err)
+      reply(`couldn't download, ${err}`)
+    }
+  })
 
   tg.action(
     ["video", "audio"],

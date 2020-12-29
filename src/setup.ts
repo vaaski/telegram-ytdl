@@ -1,7 +1,7 @@
 import { existsSync, createWriteStream, copyFileSync } from "fs"
 import { join } from "path"
 import { platform } from "os"
-import axios from "axios"
+import got from "got"
 
 const winDL = "https://yt-dl.org/latest/youtube-dl.exe"
 const unixDL = "https://yt-dl.org/latest/youtube-dl"
@@ -19,10 +19,8 @@ const ytdlExist = (): Promise<void> =>
     if (!existsSync(path)) {
       console.log("youtube-dl not found, downloading...")
       const file = createWriteStream(path)
-      const response = await axios.get(url, {
-        responseType: "stream",
-      })
-      response.data.pipe(file)
+      const response = await got.stream(url)
+      response.pipe(file)
       file.on("close", res)
     } else res()
   })
@@ -39,7 +37,7 @@ const cloneDotEnv = async () => {
 const setup = async () => {
   await ytdlExist()
   await cloneDotEnv()
-  if (!process.env.BOT_TOKEN) {
+  if (!process.env.BOT_TOKEN && !process.argv[2]) {
     console.log("BOT_TOKEN required, please include it in the .env file.")
     process.exit()
   }

@@ -1,5 +1,5 @@
 import { URL } from "url"
-import * as execa from "execa"
+import execa from "execa"
 import { join } from "path"
 import { YoutubeDL } from "./youtube-dl-types"
 

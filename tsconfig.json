@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
-    "lib": ["es2015"],
+    "lib": ["es2015", "dom"],
     "module": "CommonJS"
   },
   "exclude": ["node_modules"]
