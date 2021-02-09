@@ -48,7 +48,8 @@ import got from "got"
     console.log(`[${name}](${message?.message_id}) ${message?.text}`)
 
     const text = message?.text || ""
-    if (!youtubeRegex.test(text) || tiktokRegex.test(text))
+    log(tiktokRegex.test(text))
+    if (!youtubeRegex.test(text) && !tiktokRegex.test(text))
       reply(strings.unsupported(urlRegex.exec(text)?.[2] || text))
     await next()
   })
@@ -111,13 +112,14 @@ import got from "got"
   })
 
   tg.hears(tiktokRegex, async ({ message, reply, replyWithVideo }) => {
-    if (!message?.text) return
-
-    const url = new URL(message.text, "https://www.tiktok.com").toString()
-    const response = await reply(strings.downloading("tiktok"))
-
     try {
-      const info = await youtubeDL.info(url)
+      if (!message?.text) throw new Error("error parsing message")
+
+      const url = new URL(message.text)
+      const download = url.toString()
+      const response = await reply(strings.downloading(`from ${url.hostname}`))
+
+      const info = await youtubeDL.info(download)
       const format = info.formats?.[0]
       if (!format) throw new Error("no downloadable format found")
       const removeHashtags = (str: string) =>
