@@ -1,6 +1,6 @@
 import { Telegraf, Markup } from "telegraf"
 import strings from "./strings"
-import { FormatsEntity } from "./youtube-dl-types"
+import { FormatsEntity } from "./youtube-dl.d"
 import type * as ytdl from "ytdl-core"
 import setup from "./setup"
 import youtubeDL from "./youtube-dl"
@@ -13,13 +13,16 @@ import got from "got"
 
   const isDev = Boolean(process.env.DEV_LOG)
   const log = (...t: any[]) =>
-    isDev ? console.log(...t.map((a) => (typeof a === "string" ? chalk.gray(a) : a))) : null
+    isDev ? console.log(...t.map(a => (typeof a === "string" ? chalk.gray(a) : a))) : null
 
   await setup()
 
   const tg = new Telegraf(token)
 
   const youtubeRegex = /(?:youtube|youtu.be)+(?:.*?)(?:^|\/|v=)([a-z0-9_-]{11})(?:.*)?/i
+  const tiktokRegex = /tiktok\.com/i
+  const urlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/
+
   const audioVideoSelector = Markup.inlineKeyboard([
     Markup.callbackButton("audio", "audio"),
     Markup.callbackButton("video", "video"),
@@ -39,54 +42,62 @@ import got from "got"
   }
   const cachedDownloads: CachedDownloads = {}
 
-  tg.use(async ({ message, chat, callbackQuery }, next) => {
+  tg.use(async ({ message, chat, callbackQuery, reply }, next) => {
     if (callbackQuery) return await next()
-    console.log(`[@${chat?.username}](${message?.message_id}) ${message?.text}`)
+    const name = `@${chat?.username}` || `${chat?.first_name} ${chat?.last_name}`
+    console.log(`[${name}](${message?.message_id}) ${message?.text}`)
+
+    const text = message?.text || ""
+    if (!youtubeRegex.test(text) || tiktokRegex.test(text))
+      reply(strings.unsupported(urlRegex.exec(text)?.[2] || text))
     await next()
   })
 
   tg.start(({ reply, chat }) => {
-    reply(strings.start(chat?.username))
+    reply(strings.start(chat?.username || ""))
   })
 
   tg.hears(youtubeRegex, async ({ reply, message }, next) => {
     try {
       if (!message || !message.text) return
 
-      let videoID: any = youtubeRegex.exec(message.text)
-      if (videoID) videoID = videoID[1]
+      let videoID: string = youtubeRegex.exec(message.text)?.[1] || ""
 
       let initialReply = videoID
-      if (cachedDownloads[videoID]) initialReply = cachedDownloads[videoID].title
+      if (cachedDownloads[videoID]) initialReply = cachedDownloads[videoID].title || ""
 
       const { message_id, chat } = await reply(strings.formatSelection(initialReply), {
         ...audioVideoSelector,
         reply_to_message_id: message.message_id,
       })
 
-      if (!cachedDownloads[videoID] || cachedDownloads[videoID].expire < +Date.now()) {
+      if (
+        !cachedDownloads[videoID] ||
+        Number(cachedDownloads[videoID].expire) < +Date.now()
+      ) {
         log("not cached, downloading.")
         cachedDownloads[videoID] = { loading: true }
         const start = +new Date()
 
-        ytdlCore.getFormats(videoID).then((formats) => {
+        ytdlCore.getFormats(videoID).then(formats => {
           console.log(
             `[@${chat.username}](${message?.message_id}) ytdl-core took ${
               +new Date() - start
-            }ms to get video info`,
+            }ms to get video info`
           )
           if (initialReply === videoID && !cachedDownloads[videoID].onload) {
             log("user didn't select format yet.")
             tg.telegram.editMessageText(
               chat.id,
               message_id,
-              null,
+              "",
               strings.formatSelection(formats.title),
-              audioVideoSelector,
+              audioVideoSelector
             )
           } else if (typeof cachedDownloads[videoID].onload === "function") {
             log("user already selected format, resolving waiting promise.")
-            cachedDownloads[videoID].onload(formats)
+            const cached = cachedDownloads[videoID]
+            if (cached.onload) cached.onload(formats)
           }
 
           cachedDownloads[videoID] = formats
@@ -99,14 +110,18 @@ import got from "got"
     }
   })
 
-  tg.hears(/tiktok\.com/i, async ({ message, reply, replyWithVideo }) => {
+  tg.hears(tiktokRegex, async ({ message, reply, replyWithVideo }) => {
+    if (!message?.text) return
+
     const url = new URL(message.text, "https://www.tiktok.com").toString()
     const response = await reply(strings.downloading("tiktok"))
 
     try {
       const info = await youtubeDL.info(url)
-      const format = info.formats[0]
-      const removeHashtags = (str) => str.replace(/#\w+/g, "").replace(/\s{2,}/g, "")
+      const format = info.formats?.[0]
+      if (!format) throw new Error("no downloadable format found")
+      const removeHashtags = (str: string) =>
+        str.replace(/#\w+/g, "").replace(/\s{2,}/g, "")
 
       const video = got.stream(format.url, {
         headers: { ...format.http_headers },
@@ -121,7 +136,7 @@ import got from "got"
           caption: removeHashtags(info.description),
           reply_to_message_id: message.message_id,
           supports_streaming: true,
-        },
+        }
       )
       await tg.telegram.deleteMessage(response.chat.id, response.message_id)
     } catch (err) {
@@ -132,35 +147,40 @@ import got from "got"
 
   tg.action(
     ["video", "audio"],
-    async ({ callbackQuery, answerCbQuery, replyWithAudio, replyWithVideo, reply }, next) => {
+    async (
+      { callbackQuery, answerCbQuery, replyWithAudio, replyWithVideo, reply },
+      next
+    ) => {
       try {
-        const type: "video" | "audio" = callbackQuery.data as "video" | "audio"
-        const videoID = youtubeRegex.exec(callbackQuery.message.reply_to_message.text)[1]
+        const type: "video" | "audio" = callbackQuery?.data as "video" | "audio"
+        const replyTo = callbackQuery?.message?.reply_to_message
+        if (!replyTo) throw new Error("no replyTo message")
+
+        const videoID = youtubeRegex.exec(replyTo.text || "")?.[1] || ""
         answerCbQuery(strings.downloading(type))
-        const { chat, message_id } = callbackQuery.message.reply_to_message
+        const { chat, message_id } = replyTo
 
         tg.telegram.editMessageText(
-          callbackQuery.message.chat.id,
-          callbackQuery.message.message_id,
-          null,
-          strings.downloading(type),
-          null,
+          callbackQuery?.message?.chat.id,
+          callbackQuery?.message?.message_id,
+          "",
+          strings.downloading(type)
         )
 
         if (
           !cachedDownloads[videoID] ||
           !cachedDownloads[videoID].title ||
-          cachedDownloads[videoID].expire < +Date.now()
+          Number(cachedDownloads[videoID].expire) < +Date.now()
         ) {
           if (cachedDownloads[videoID]?.loading) {
             log("video already loading, waiting..")
-            await new Promise((res) => {
+            await new Promise(res => {
               cachedDownloads[videoID].onload = res
             })
             log("done waiting.")
           } else {
             log(
-              `[@${chat.username}](${message_id}) https://youtu.be/${videoID} not downloading, starting new dl`,
+              `[@${chat.username}](${message_id}) https://youtu.be/${videoID} not downloading, starting new dl`
             )
             cachedDownloads[videoID] = await ytdlCore.getFormats(videoID)
             log(`done downloading ${videoID}.`)
@@ -169,42 +189,52 @@ import got from "got"
 
         const dl = cachedDownloads[videoID]
         try {
-          if (type === "video")
+          if (type === "video") {
             await replyWithVideo(
               {
-                url: dl[type].url,
-                filename: filename(dl.title),
+                url: dl?.[type]?.url || "",
+                filename: filename(dl.title || ""),
               },
               {
                 caption: dl.title,
-                reply_to_message_id: callbackQuery.message.reply_to_message.message_id,
+                reply_to_message_id: replyTo.message_id,
                 supports_streaming: true,
-              },
+              }
             )
-          if (type === "audio")
+          } else if (type === "audio") {
             await replyWithAudio(
               {
-                url: dl[type].url,
-                filename: `${filename(dl.title)}.mp3`,
+                url: dl?.[type]?.url || "",
+                filename: `${filename(dl.title || "")}.mp3`,
               },
               {
-                reply_to_message_id: callbackQuery.message.reply_to_message.message_id,
-              },
+                reply_to_message_id: replyTo.message_id,
+              }
             )
+          }
         } catch (err) {
-          reply(strings.uploadFailed(dl[type].url, new Date(dl.expire).toLocaleString()), {
-            parse_mode: "Markdown",
-            reply_to_message_id: callbackQuery.message.reply_to_message.message_id,
-          })
+          reply(
+            strings.uploadFailed(
+              dl?.[type]?.url || "",
+              new Date(dl?.expire || 0).toLocaleString()
+            ),
+            {
+              parse_mode: "Markdown",
+              reply_to_message_id: replyTo.message_id,
+            }
+          )
         }
 
-        tg.telegram.deleteMessage(callbackQuery.message.chat.id, callbackQuery.message.message_id)
+        tg.telegram.deleteMessage(
+          callbackQuery?.message?.chat.id || "",
+          callbackQuery?.message?.message_id || 0
+        )
 
         await next()
       } catch (err) {
         log("action err", err)
       }
-    },
+    }
   )
 
   await tg.launch()

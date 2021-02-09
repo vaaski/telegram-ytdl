@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
-    "skipLibCheck": true,
+    "target": "ES2017",
+    "module": "commonjs",
+    "lib": ["es2018", "DOM"],
+    "allowJs": true,
+    "outDir": "build",
+    "strict": true,
+    "noImplicitAny": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "importHelpers": true,
-    "lib": ["es2015", "dom"],
-    "module": "CommonJS"
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

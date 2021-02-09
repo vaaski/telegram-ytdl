@@ -1,7 +1,7 @@
 import { URL } from "url"
 import execa from "execa"
 import { join } from "path"
-import { YoutubeDL } from "./youtube-dl-types"
+import { YoutubeDL } from "./youtube-dl.d"
 
 const youtubeDL = {
   info: async (src: string): Promise<YoutubeDL> => {
@@ -9,6 +9,7 @@ const youtubeDL = {
     return JSON.parse(stdout)
   },
   filterFormats: ({ formats, title }: YoutubeDL) => {
+    if (!formats) throw new Error("no formats found")
     const video = formats
       .filter(({ vcodec, acodec }) => vcodec !== "none" && acodec !== "none")
       .reverse()[0]
