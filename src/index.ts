@@ -24,8 +24,8 @@ import got from "got"
   const urlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/
 
   const audioVideoSelector = Markup.inlineKeyboard([
-    Markup.callbackButton("audio", "audio"),
-    Markup.callbackButton("video", "video"),
+    [Markup.callbackButton("audio", "audio")],
+    [Markup.callbackButton("video", "video")],
   ]).extra()
 
   const filename = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase()
