@@ -21,7 +21,7 @@ import got from "got"
 
   const youtubeRegex = /(?:youtube|youtu.be)+(?:.*?)(?:^|\/|v=)([a-z0-9_-]{11})(?:.*)?/i
   const tiktokRegex = /tiktok\.com/i
-  const urlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/
+  const urlRegex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/
 
   const audioVideoSelector = Markup.inlineKeyboard([
     [Markup.callbackButton("audio", "audio")],
@@ -32,8 +32,8 @@ import got from "got"
 
   interface CachedDownloads {
     [key: string]: {
-      loading?: Function | boolean
-      onload?: Function
+      loading?: boolean
+      onload?: (x: any) => void
       video?: FormatsEntity | ytdl.videoFormat
       audio?: FormatsEntity | ytdl.videoFormat
       expire?: number
@@ -62,7 +62,7 @@ import got from "got"
     try {
       if (!message || !message.text) return
 
-      let videoID: string = youtubeRegex.exec(message.text)?.[1] || ""
+      const videoID: string = youtubeRegex.exec(message.text)?.[1] || ""
 
       let initialReply = videoID
       if (cachedDownloads[videoID]) initialReply = cachedDownloads[videoID].title || ""
