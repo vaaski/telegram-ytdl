@@ -1,6 +1,3 @@
-.env
 node_modules
-youtube-dl
-youtube-dl.exe
-build
-out.json
+lib
+.env

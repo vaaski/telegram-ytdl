@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "es2018",
     "module": "commonjs",
-    "lib": ["es2018", "DOM"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "outDir": "lib",
     "allowJs": true,
-    "outDir": "build",
     "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true
   },
   "include": ["src"]
 }
