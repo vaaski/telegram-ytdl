@@ -2,13 +2,12 @@ import { URL } from "url"
 import execa from "execa"
 import { join } from "path"
 
+import { FilteredFormats } from "../types"
 import { Format, YoutubeDL } from "../types/YoutubeDL"
 
-export interface FilteredFormats {
+export interface YTDLFilteredFormats extends FilteredFormats {
   video: Format
   audio: Format
-  expire: number
-  title: string
 }
 
 export default class youtubeDL {
