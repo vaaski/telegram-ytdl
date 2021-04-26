@@ -1,11 +1,11 @@
 {
-  "watch": [
-    "src",
-    "types"
-  ],
+  "watch": ["src", "types"],
   "ext": "ts, json",
   "exec": "npx ts-node -r dotenv/config ./src/index.ts",
   "events": {
     "start": "node -e console.clear()"
+  },
+  "env": {
+    "debug": "telegram-ytdl*"
   }
 }
