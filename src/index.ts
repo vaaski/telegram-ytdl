@@ -1,8 +1,11 @@
 import setup from "./setup"
 import debug from "debug"
-import { Context, Telegraf } from "telegraf"
+import { Context, Markup, Telegraf } from "telegraf"
 import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX, URL_REGEX } from "./constants"
 import strings from "./strings"
+import Downloader from "./downloader"
+import { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types"
+import { CallbackQuery, ReplyMessage } from "typegram"
 
 interface ExtendedContext extends Context {
   name: string
@@ -10,11 +13,14 @@ interface ExtendedContext extends Context {
   tiktok?: string
 }
 
+const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase()
+
 !(async () => {
   const log = debug("telegram-ytdl")
   const BOT_TOKEN = await setup()
 
   const bot = new Telegraf<ExtendedContext>(BOT_TOKEN)
+  const downloader = new Downloader(log)
 
   bot.use(async (ctx, next) => {
     const name = `@${ctx.from?.username}` || `${ctx.from?.first_name} ${ctx.from?.last_name}`
@@ -42,20 +48,74 @@ interface ExtendedContext extends Context {
     return ctx.reply(strings.unsupported())
   })
 
-  bot.command("start", ctx => {
-    ctx.reply(strings.start(ctx.name), { parse_mode: "HTML" })
-  })
-  bot.telegram.setMyCommands([{ command: "start", description: strings.startDescription() }])
-
-  bot.on("text", ctx => {
+  bot.on("text", async ctx => {
     if (ctx.youtube) {
-      ctx.reply(strings.formatSelection(ctx.youtube), { reply_markup: AUDIO_VIDEO_KEYBOARD })
+      const extra: ExtraReplyMessage & ExtraEditMessageText = {
+        reply_markup: AUDIO_VIDEO_KEYBOARD,
+        parse_mode: "HTML",
+      }
+
+      const res = ctx.reply(strings.formatSelection(ctx.youtube), {
+        ...extra,
+        reply_to_message_id: ctx.message.message_id,
+      })
+      const formats = await downloader.youtube(ctx.youtube)
+
+      bot.telegram.editMessageText(
+        ctx.chat.id,
+        (await res).message_id,
+        undefined,
+        strings.formatSelection(formats.title),
+        extra
+      )
     }
 
     if (ctx.tiktok) {
       ctx.reply(strings.downloading("from tiktok"))
     }
   })
+
+  const getCallbackReplyToText = (callbackQuery: CallbackQuery): string | undefined => {
+    // @ts-expect-error the types seem to be bad
+    return callbackQuery.message?.reply_to_message?.text as string | undefined
+  }
+
+  const actionHandler = (type: "audio" | "video") => async (ctx: Context) => {
+    if (!ctx.callbackQuery) throw Error("no callbackQuery found")
+
+    const text = getCallbackReplyToText(ctx.callbackQuery)
+    if (!text) throw Error("no text in callbackQuery reply-to message")
+
+    const { message } = ctx.callbackQuery
+    if (!message?.chat.id || !message?.message_id) throw Error("message has no ids")
+
+    ctx.answerCbQuery(strings.downloading(`as ${type}`))
+    bot.telegram.deleteMessage(message.chat.id, message.message_id)
+
+    const media = await downloader.youtube(text)
+
+    if (type === "video") {
+      ctx.replyWithVideo(
+        {
+          url: media.video.url,
+          filename: filenameify(media.title),
+        },
+        {
+          caption: media.title,
+          supports_streaming: true,
+          // reply_to_message_id: // TODO
+        }
+      )
+    }
+  }
+
+  bot.action("audio", actionHandler("audio"))
+  bot.action("video", actionHandler("video"))
+
+  bot.command("start", ctx => {
+    ctx.reply(strings.start(ctx.name), { parse_mode: "HTML" })
+  })
+  bot.telegram.setMyCommands([{ command: "start", description: strings.startDescription() }])
 
   await bot.launch()
   console.log("bot launched")

@@ -2,10 +2,10 @@ import { URL } from "url"
 import execa from "execa"
 import { join } from "path"
 
-import { FilteredFormats } from "../types"
+import { FilteredFormat } from "../types"
 import { Format, YoutubeDL } from "../types/YoutubeDL"
 
-export interface YTDLFilteredFormats extends FilteredFormats {
+export interface YTDLFilteredFormats extends FilteredFormat {
   video: Format
   audio: Format
 }
@@ -16,7 +16,7 @@ export default class youtubeDL {
     return JSON.parse(stdout)
   }
 
-  private filterFormats = ({ formats, title }: YoutubeDL): FilteredFormats => {
+  private filterFormats = ({ formats, title }: YoutubeDL): FilteredFormat => {
     if (!formats) throw new Error("no formats found")
     const video = formats
       .filter(({ vcodec, acodec }) => vcodec !== "none" && acodec !== "none")
@@ -29,7 +29,7 @@ export default class youtubeDL {
     return { video, audio, expire, title }
   }
 
-  getFormats = async (src: string): Promise<FilteredFormats> => {
+  getFormats = async (src: string): Promise<FilteredFormat> => {
     return this.filterFormats(await this.info(src))
   }
 }
