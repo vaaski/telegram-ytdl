@@ -29,6 +29,7 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
     next()
   })
 
+  //? extend the context
   bot.on("text", async (ctx, next) => {
     const text = ctx.message?.text
     log(`[${ctx.name}](${ctx.message?.message_id}) ${text}`)
@@ -48,6 +49,7 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
     return ctx.reply(strings.unsupported())
   })
 
+  //? initial reply
   bot.on("text", async ctx => {
     if (ctx.youtube) {
       const extra: ExtraReplyMessage & ExtraEditMessageText = {
@@ -67,11 +69,13 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
     }
   })
 
+  //? util function because telegraf types are wrong
   const getCallbackReplyToText = (callbackQuery: CallbackQuery): string | undefined => {
     // @ts-expect-error the types seem to be bad
     return callbackQuery.message?.reply_to_message?.text as string | undefined
   }
 
+  //? handle click on audio and video buttons
   const actionHandler = (type: "audio" | "video") => async (ctx: Context) => {
     if (!ctx.callbackQuery) throw Error("no callbackQuery found")
 
