@@ -8,7 +8,7 @@ export interface CachedDownload {
 }
 
 export default class Downloader {
-  private cachedYouTube: CachedDownload = {}
+  private cachedYTDLCore: CachedDownload = {}
   private ytdlCore = new ytdlCore()
   private log
 
@@ -20,9 +20,9 @@ export default class Downloader {
     const id = getVideoID(containingYoutubeID)
     const log = this.log.extend(id)
 
-    if (this.cachedYouTube[id]) {
+    if (this.cachedYTDLCore[id]) {
       log(`found cached youtube video`)
-      const cached = await this.cachedYouTube[id]
+      const cached = await this.cachedYTDLCore[id]
 
       if (cached.expire > Date.now()) {
         log(`cached video hasn't expired`)
@@ -31,7 +31,7 @@ export default class Downloader {
     }
 
     log(`downloading fresh`)
-    this.cachedYouTube[id] = this.ytdlCore.getFormats(containingYoutubeID)
-    return await this.cachedYouTube[id]
+    this.cachedYTDLCore[id] = this.ytdlCore.getFormats(containingYoutubeID)
+    return await this.cachedYTDLCore[id]
   }
 }

@@ -1,11 +1,11 @@
 import setup from "./setup"
 import debug from "debug"
-import { Context, Markup, Telegraf } from "telegraf"
+import { Context, Telegraf } from "telegraf"
 import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX, URL_REGEX } from "./constants"
 import strings from "./strings"
 import Downloader from "./downloader"
 import { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types"
-import { CallbackQuery, ReplyMessage } from "typegram"
+import { CallbackQuery } from "typegram"
 
 interface ExtendedContext extends Context {
   name: string
@@ -55,19 +55,11 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
         parse_mode: "HTML",
       }
 
-      const res = ctx.reply(strings.formatSelection(ctx.youtube), {
+      ctx.reply(strings.formatSelection(), {
         ...extra,
         reply_to_message_id: ctx.message.message_id,
       })
-      const formats = await downloader.youtube(ctx.youtube)
-
-      bot.telegram.editMessageText(
-        ctx.chat.id,
-        (await res).message_id,
-        undefined,
-        strings.formatSelection(formats.title),
-        extra
-      )
+      await downloader.youtube(ctx.youtube)
     }
 
     if (ctx.tiktok) {
@@ -94,6 +86,11 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
 
     const media = await downloader.youtube(text)
 
+    if (media[type].overSize) {
+      log(`${type} is too large`)
+      return ctx.reply(strings.overSize(type, media[type].url))
+    }
+
     if (type === "video") {
       ctx.replyWithVideo(
         {
@@ -103,7 +100,6 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
         {
           caption: media.title,
           supports_streaming: true,
-          // reply_to_message_id: // TODO
         }
       )
     }

@@ -3,12 +3,8 @@ import execa from "execa"
 import { join } from "path"
 
 import { FilteredFormat } from "../types"
-import { Format, YoutubeDL } from "../types/YoutubeDL"
-
-export interface YTDLFilteredFormats extends FilteredFormat {
-  video: Format
-  audio: Format
-}
+import { YoutubeDL } from "../types/YoutubeDL"
+import { TELEGRAM_BOT_LIMIT } from "./constants"
 
 export default class youtubeDL {
   private info = async (src: string): Promise<YoutubeDL> => {
@@ -26,7 +22,18 @@ export default class youtubeDL {
       .reverse()[0]
     const expire = Number(new URL(video.url).searchParams.get("expire")) * 1e3
 
-    return { video, audio, expire, title }
+    return {
+      video: {
+        ...video,
+        overSize: (video.filesize ?? 0) > TELEGRAM_BOT_LIMIT,
+      },
+      audio: {
+        ...audio,
+        overSize: (audio.filesize ?? 0) > TELEGRAM_BOT_LIMIT,
+      },
+      expire,
+      title,
+    }
   }
 
   getFormats = async (src: string): Promise<FilteredFormat> => {

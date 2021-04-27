@@ -1,11 +1,7 @@
 import { URL } from "url"
 import * as ytdl from "ytdl-core"
 import { FilteredFormat } from "../types"
-
-export interface YTDLFilteredFormats extends FilteredFormat {
-  video: ytdl.videoFormat
-  audio: ytdl.videoFormat
-}
+import { TELEGRAM_BOT_LIMIT } from "./constants"
 
 export default class ytdlCore {
   private info = async (src: string): Promise<ytdl.videoInfo> => await ytdl.getInfo(src)
@@ -26,7 +22,20 @@ export default class ytdlCore {
 
     const expire = Number(new URL(video.url).searchParams.get("expire")) * 1e3
 
-    return { video, audio, expire, title }
+    // TODO content-length is undefined, make a HEAD request
+
+    return {
+      video: {
+        ...video,
+        overSize: parseInt(video.contentLength) > TELEGRAM_BOT_LIMIT,
+      },
+      audio: {
+        ...audio,
+        overSize: parseInt(audio.contentLength) > TELEGRAM_BOT_LIMIT,
+      },
+      expire,
+      title,
+    }
   }
 
   getFormats = async (src: string): Promise<FilteredFormat> => {

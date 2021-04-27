@@ -8,3 +8,5 @@ export const AUDIO_VIDEO_KEYBOARD = Markup.inlineKeyboard([
   [Markup.button.callback("audio", "audio")],
   [Markup.button.callback("video", "video")],
 ]).reply_markup
+
+export const TELEGRAM_BOT_LIMIT = 5.243e7
