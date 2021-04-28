@@ -40,7 +40,7 @@ const cloneDotEnv = async () => {
 export default async (): Promise<string> => {
   await ensureYoutubeDL()
   if (platform() !== "win32")
-    await execa.command("chmod a+rx" + join(__dirname, "../youtube-dl"))
+    await execa.command("chmod a+rx " + join(__dirname, "../youtube-dl"))
 
   await cloneDotEnv()
 
