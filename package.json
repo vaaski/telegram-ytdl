@@ -1,6 +1,6 @@
 {
   "name": "telegram-ytdl",
-  "description": "A simple, fast and bandwidth-conserving YouTube downloader.",
+  "description": "A simple, fast and bandwidth-conserving YouTube download bot.",
   "private": true,
   "keywords": [
     "telegram",
