@@ -9,9 +9,8 @@ export const getContentLength = async (url: string): Promise<number> => {
 export const filenameify = (str: string): string =>
   str.replace(/[^a-z0-9]/gi, "_").toLowerCase()
 
-// TODO improve this
 export const removeHashtags = (str: string): string =>
-  str.replace(/#\w+/g, "").replace(/\s{2,}/g, "")
+  str.replace(/#[\w\u00F0-\u02AF]+/g, "").replace(/\s{2,}/g, "")
 
 export const bold = (s: string): string => `<b>${s}</b>`
 export const code = (s: string): string => `<code>${s}</code>`
