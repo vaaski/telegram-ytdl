@@ -2,14 +2,15 @@ import { URL } from "url"
 import * as ytdl from "ytdl-core"
 import { FilteredFormat } from "../types"
 import { TELEGRAM_BOT_LIMIT } from "./constants"
+import { getContentLength } from "./util"
 
 export default class ytdlCore {
   private info = async (src: string): Promise<ytdl.videoInfo> => await ytdl.getInfo(src)
 
-  private filterFormats = ({
+  private filterFormats = async ({
     formats,
     videoDetails: { title },
-  }: ytdl.videoInfo): FilteredFormat => {
+  }: ytdl.videoInfo): Promise<FilteredFormat> => {
     const video = formats
       .filter(({ hasVideo, hasAudio }) => hasVideo && hasAudio)
       .sort((a, b) => (b.width || 0) - (a.width || 0))[0]
@@ -27,11 +28,11 @@ export default class ytdlCore {
     return {
       video: {
         ...video,
-        overSize: parseInt(video.contentLength) > TELEGRAM_BOT_LIMIT,
+        overSize: (await getContentLength(video.url)) >= TELEGRAM_BOT_LIMIT,
       },
       audio: {
         ...audio,
-        overSize: parseInt(audio.contentLength) > TELEGRAM_BOT_LIMIT,
+        overSize: (await getContentLength(audio.url)) >= TELEGRAM_BOT_LIMIT,
       },
       expire,
       title,

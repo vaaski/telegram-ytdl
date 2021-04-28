@@ -1,19 +1,14 @@
-import setup from "./setup"
 import debug from "debug"
-import { Context, Telegraf } from "telegraf"
+import { Telegraf } from "telegraf"
+
+import setup from "./setup"
 import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX, URL_REGEX } from "./constants"
 import strings from "./strings"
 import Downloader from "./downloader"
-import { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types"
-import { CallbackQuery } from "typegram"
 
-interface ExtendedContext extends Context {
-  name: string
-  youtube?: string
-  tiktok?: string
-}
-
-const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase()
+import type { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types"
+import type { ExtendedContext } from "../types"
+import actionHandler from "./actionHandler"
 
 !(async () => {
   const log = debug("telegram-ytdl")
@@ -22,7 +17,10 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
   const bot = new Telegraf<ExtendedContext>(BOT_TOKEN)
   const downloader = new Downloader(log)
 
+  //? initial filter and provide the name to the ctx
   bot.use(async (ctx, next) => {
+    if (ctx.from?.is_bot) return
+
     const name = `@${ctx.from?.username}` || `${ctx.from?.first_name} ${ctx.from?.last_name}`
     ctx.name = name
 
@@ -46,7 +44,7 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
       if (ctx.tiktok) return next()
     }
 
-    return ctx.reply(strings.unsupported())
+    return ctx.replyWithHTML(strings.unsupported())
   })
 
   //? initial reply
@@ -54,10 +52,9 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
     if (ctx.youtube) {
       const extra: ExtraReplyMessage & ExtraEditMessageText = {
         reply_markup: AUDIO_VIDEO_KEYBOARD,
-        parse_mode: "HTML",
       }
 
-      ctx.reply(strings.formatSelection(), {
+      ctx.replyWithHTML(strings.formatSelection(), {
         ...extra,
         reply_to_message_id: ctx.message.message_id,
       })
@@ -65,55 +62,14 @@ const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase
     }
 
     if (ctx.tiktok) {
-      ctx.reply(strings.downloading("from tiktok"))
+      ctx.replyWithHTML(strings.downloading("from tiktok"))
     }
   })
 
-  //? util function because telegraf types are wrong
-  const getCallbackReplyToText = (callbackQuery: CallbackQuery): string | undefined => {
-    // @ts-expect-error the types seem to be bad
-    return callbackQuery.message?.reply_to_message?.text as string | undefined
-  }
-
-  //? handle click on audio and video buttons
-  const actionHandler = (type: "audio" | "video") => async (ctx: Context) => {
-    if (!ctx.callbackQuery) throw Error("no callbackQuery found")
-
-    const text = getCallbackReplyToText(ctx.callbackQuery)
-    if (!text) throw Error("no text in callbackQuery reply-to message")
-
-    const { message } = ctx.callbackQuery
-    if (!message?.chat.id || !message?.message_id) throw Error("message has no ids")
-
-    ctx.answerCbQuery(strings.downloading(`as ${type}`))
-    bot.telegram.deleteMessage(message.chat.id, message.message_id)
-
-    const media = await downloader.youtube(text)
-
-    if (media[type].overSize) {
-      log(`${type} is too large`)
-      return ctx.reply(strings.overSize(type, media[type].url))
-    }
-
-    if (type === "video") {
-      ctx.replyWithVideo(
-        {
-          url: media.video.url,
-          filename: filenameify(media.title),
-        },
-        {
-          caption: media.title,
-          supports_streaming: true,
-        }
-      )
-    }
-  }
-
-  bot.action("audio", actionHandler("audio"))
-  bot.action("video", actionHandler("video"))
+  actionHandler(bot, downloader, log.extend("actionHandler"))
 
   bot.command("start", ctx => {
-    ctx.reply(strings.start(ctx.name), { parse_mode: "HTML" })
+    ctx.replyWithHTML(strings.start(ctx.name))
   })
   bot.telegram.setMyCommands([{ command: "start", description: strings.startDescription() }])
 

@@ -13,8 +13,10 @@ const strings = {
   error: () => `something went wrong.`,
   overSize: (type: string, url: string) =>
     `unfortunately, telegram bots can only upload files up to 50MB, and your ${type} is larger than that.\n` +
-    `please visit the link and long-press or right-click and select "download" or "save as"\n\n` +
-    `direct video link: ${url}`,
+    `please visit the link and ` +
+    `${bold("long-press")} or ${bold("right-click")} ` +
+    `and select ${bold("download")} or ${bold("save as")}\n\n` +
+    `${url}`,
 }
 
 export default strings
