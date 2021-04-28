@@ -18,6 +18,8 @@ export default class Notifier {
   }
 
   notify(text: string): void {
+    if (!this.chat_id) return
+
     this.bot.telegram.sendMessage(this.chat_id, text, this.extra)
   }
 
