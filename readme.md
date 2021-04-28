@@ -32,13 +32,13 @@ Thats it!
 I am open to contributions. Just clone the repo and run two commands to get started:
 
 ```sh
-npm ci # installs the dependencies exactly as defined in the lockfile
+npm ci
 ```
 
 and
 
 ```sh
-npm run dev # runs nodemon with node-ts and dotenv, with debugging enabled
+npm run dev
 ```
 
 Make sure to include your bot credentials in the .env file or as environment variables.
