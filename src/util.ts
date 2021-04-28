@@ -12,6 +12,9 @@ export const filenameify = (str: string): string =>
 export const removeHashtags = (str: string): string =>
   str.replace(/#\w+/g, "").replace(/\s{2,}/g, "")
 
+export const bold = (s: string): string => `<b>${s}</b>`
+export const code = (s: string): string => `<code>${s}</code>`
+
 // interface shortenerResponse {
 //   slug: string
 //   target: string

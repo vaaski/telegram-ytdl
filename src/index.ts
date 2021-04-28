@@ -11,6 +11,7 @@ import strings from "./strings"
 import Downloader from "./downloader"
 import actionHandler from "./actionHandler"
 import { filenameify, removeHashtags } from "./util"
+import Notifier from "./notify"
 
 !(async () => {
   const log = debug("telegram-ytdl")
@@ -18,6 +19,7 @@ import { filenameify, removeHashtags } from "./util"
 
   const bot = new Telegraf<ExtendedContext>(BOT_TOKEN)
   const downloader = new Downloader(log)
+  const notifier = new Notifier(bot)
 
   //? initial filter and provide the name to the ctx
   bot.use(async (ctx, next) => {
@@ -32,7 +34,8 @@ import { filenameify, removeHashtags } from "./util"
   //? extend the context
   bot.on("text", async (ctx, next) => {
     const text = ctx.message?.text
-    log(`[${ctx.name}](${ctx.message?.message_id}) ${text}`)
+    const messageLog = `[${ctx.name}](${ctx.message?.message_id}) ${text}`
+    log(messageLog)
 
     const youtube = YOUTUBE_REGEX.exec(text)?.[1] || ""
     if (youtube) {
@@ -48,6 +51,7 @@ import { filenameify, removeHashtags } from "./util"
 
     if (ctx.chat.type !== "private") return
 
+    notifier.unsupported(messageLog)
     return ctx.replyWithHTML(strings.unsupported())
   })
 
@@ -62,7 +66,13 @@ import { filenameify, removeHashtags } from "./util"
         ...extra,
         reply_to_message_id: ctx.message.message_id,
       })
-      await downloader.youtube(ctx.youtube)
+      try {
+        await downloader.youtube(ctx.youtube)
+      } catch (error) {
+        log(error)
+        notifier.error(error)
+        ctx.reply(strings.error(), { disable_web_page_preview: true })
+      }
     }
 
     if (ctx.tiktok) {
@@ -88,6 +98,7 @@ import { filenameify, removeHashtags } from "./util"
         })
       } catch (error) {
         log(error)
+        notifier.error(error)
         ctx.reply(strings.error(), { disable_web_page_preview: true })
       } finally {
         bot.telegram.deleteMessage(reply.chat.id, reply.message_id)
