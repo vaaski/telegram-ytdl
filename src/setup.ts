@@ -2,6 +2,7 @@ import { platform } from "os"
 import { join } from "path"
 import { exists, createWriteStream, copyAsync } from "fs-jetpack"
 import got from "got"
+import execa from "execa"
 
 const winDL = "https://yt-dl.org/latest/youtube-dl.exe"
 const unixDL = "https://yt-dl.org/latest/youtube-dl"
@@ -38,6 +39,9 @@ const cloneDotEnv = async () => {
 
 export default async (): Promise<string> => {
   await ensureYoutubeDL()
+  if (platform() !== "win32")
+    await execa.command("chmod a+rx" + join(__dirname, "../youtube-dl"))
+
   await cloneDotEnv()
 
   const BOT_TOKEN = process.env.BOT_TOKEN
