@@ -10,7 +10,7 @@ const strings = {
   formatSelection: (video?: string) =>
     `download${video ? " " + bold(video) : ""} as audio or video?`,
   downloading: (add?: string) => `downloading${add ? " " + add : ""}...`,
-  error: () => `something went wrong.`,
+  error: (add?: string) => `something went wrong.` + (add ? "\n\n" + add : ""),
   overSize: (type: string, url: string) =>
     `unfortunately, telegram bots can only upload files up to 50MB, and your ${type} is larger than that.\n` +
     `please visit the link and ` +

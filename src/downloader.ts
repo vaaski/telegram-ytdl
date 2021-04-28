@@ -1,6 +1,9 @@
+import type { FilteredFormat } from "../types"
+import type { YoutubeDL } from "../types/YoutubeDL"
+
 import debug from "debug"
 import { getVideoID } from "ytdl-core"
-import type { FilteredFormat } from "../types"
+import youtubeDL from "./youtube-dl"
 import ytdlCore from "./ytdl-core"
 
 export interface CachedDownload {
@@ -10,6 +13,7 @@ export interface CachedDownload {
 export default class Downloader {
   private cachedYTDLCore: CachedDownload = {}
   private ytdlCore = new ytdlCore()
+  private youtubeDL = new youtubeDL()
   private log
 
   constructor(logger: debug.Debugger) {
@@ -33,5 +37,10 @@ export default class Downloader {
     log(`downloading fresh`)
     this.cachedYTDLCore[id] = this.ytdlCore.getFormats(containingYoutubeID)
     return await this.cachedYTDLCore[id]
+  }
+
+  any = async (source: string): Promise<YoutubeDL> => {
+    this.log(source)
+    return await this.youtubeDL.info(source)
   }
 }

@@ -1,14 +1,16 @@
+import type { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types"
+import type { ExtendedContext } from "../types"
+
 import debug from "debug"
 import { Telegraf } from "telegraf"
+import got from "got"
 
 import setup from "./setup"
 import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX, URL_REGEX } from "./constants"
 import strings from "./strings"
 import Downloader from "./downloader"
-
-import type { ExtraEditMessageText, ExtraReplyMessage } from "telegraf/typings/telegram-types"
-import type { ExtendedContext } from "../types"
 import actionHandler from "./actionHandler"
+import { filenameify, removeHashtags } from "./util"
 
 !(async () => {
   const log = debug("telegram-ytdl")
@@ -44,6 +46,8 @@ import actionHandler from "./actionHandler"
       if (ctx.tiktok) return next()
     }
 
+    if (ctx.chat.type !== "private") return
+
     return ctx.replyWithHTML(strings.unsupported())
   })
 
@@ -62,7 +66,32 @@ import actionHandler from "./actionHandler"
     }
 
     if (ctx.tiktok) {
-      ctx.replyWithHTML(strings.downloading("from tiktok"))
+      const reply = await ctx.replyWithHTML(strings.downloading("from tiktok"))
+
+      try {
+        const download = await downloader.any(ctx.tiktok)
+        const format = download.formats[0]
+        const description = removeHashtags(download.description)
+        const filename = filenameify(description)
+
+        if (!format) throw Error("no downloadable format found")
+
+        const source = got.stream(format.url, {
+          headers: { ...format.http_headers },
+        })
+
+        const file = { source, filename }
+        ctx.replyWithVideo(file, {
+          caption: description,
+          reply_to_message_id: ctx.message.message_id,
+          supports_streaming: true,
+        })
+      } catch (error) {
+        log(error)
+        ctx.reply(strings.error(), { disable_web_page_preview: true })
+      } finally {
+        bot.telegram.deleteMessage(reply.chat.id, reply.message_id)
+      }
     }
   })
 

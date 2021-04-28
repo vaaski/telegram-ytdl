@@ -6,8 +6,7 @@ import type { ExtendedContext } from "../types"
 import type { CallbackQuery, Message } from "typegram"
 import type Downloader from "./downloader"
 import debug from "debug"
-
-const filenameify = (str: string) => str.replace(/[^a-z0-9]/gi, "_").toLowerCase()
+import { filenameify } from "./util"
 
 export default (
   bot: Telegraf<ExtendedContext>,

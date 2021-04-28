@@ -5,9 +5,9 @@ import { TELEGRAM_BOT_LIMIT } from "./constants"
 import { getContentLength } from "./util"
 
 export default class ytdlCore {
-  private info = async (src: string): Promise<ytdl.videoInfo> => await ytdl.getInfo(src)
+  info = async (src: string): Promise<ytdl.videoInfo> => await ytdl.getInfo(src)
 
-  private filterFormats = async ({
+  filterFormats = async ({
     formats,
     videoDetails: { title },
   }: ytdl.videoInfo): Promise<FilteredFormat> => {

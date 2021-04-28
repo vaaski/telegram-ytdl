@@ -7,12 +7,12 @@ import { YoutubeDL } from "../types/YoutubeDL"
 import { TELEGRAM_BOT_LIMIT } from "./constants"
 
 export default class youtubeDL {
-  private info = async (src: string): Promise<YoutubeDL> => {
+  info = async (src: string): Promise<YoutubeDL> => {
     const { stdout } = await execa(join(__dirname, "../youtube-dl"), ["-j", src])
     return JSON.parse(stdout)
   }
 
-  private filterFormats = ({ formats, title }: YoutubeDL): FilteredFormat => {
+  filterFormats = ({ formats, title }: YoutubeDL): FilteredFormat => {
     if (!formats) throw new Error("no formats found")
     const video = formats
       .filter(({ vcodec, acodec }) => vcodec !== "none" && acodec !== "none")
@@ -25,11 +25,11 @@ export default class youtubeDL {
     return {
       video: {
         ...video,
-        overSize: (video.filesize ?? 0) > TELEGRAM_BOT_LIMIT,
+        overSize: (video?.filesize ?? 0) >= TELEGRAM_BOT_LIMIT,
       },
       audio: {
         ...audio,
-        overSize: (audio.filesize ?? 0) > TELEGRAM_BOT_LIMIT,
+        overSize: (audio?.filesize ?? 0) >= TELEGRAM_BOT_LIMIT,
       },
       expire,
       title,

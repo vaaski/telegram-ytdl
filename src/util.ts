@@ -6,6 +6,12 @@ export const getContentLength = async (url: string): Promise<number> => {
   return parseInt(data.headers["content-length"] ?? "0")
 }
 
+export const filenameify = (str: string): string =>
+  str.replace(/[^a-z0-9]/gi, "_").toLowerCase()
+
+export const removeHashtags = (str: string): string =>
+  str.replace(/#\w+/g, "").replace(/\s{2,}/g, "")
+
 // interface shortenerResponse {
 //   slug: string
 //   target: string
