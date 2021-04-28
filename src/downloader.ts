@@ -5,6 +5,7 @@ import debug from "debug"
 import { getVideoID } from "ytdl-core"
 import youtubeDL from "./youtube-dl"
 import ytdlCore from "./ytdl-core"
+import { URL_REGEX } from "./constants"
 
 export interface CachedDownload {
   [key: string]: FilteredFormat | Promise<FilteredFormat>
@@ -20,8 +21,16 @@ export default class Downloader {
     this.log = logger.extend("downloader")
   }
 
-  youtube = async (containingYoutubeID: string): Promise<FilteredFormat> => {
-    const id = getVideoID(containingYoutubeID)
+  filterURL(text: string): string {
+    const url = URL_REGEX.exec(text)?.[0]
+    if (!url) throw Error(`no url found in ${text}`)
+
+    return url
+  }
+
+  youtube = async (text: string): Promise<FilteredFormat> => {
+    const url = this.filterURL(text)
+    const id = getVideoID(url)
     const log = this.log.extend(id)
 
     if (this.cachedYTDLCore[id]) {
@@ -35,12 +44,14 @@ export default class Downloader {
     }
 
     log(`downloading fresh`)
-    this.cachedYTDLCore[id] = this.ytdlCore.getFormats(containingYoutubeID)
+    this.cachedYTDLCore[id] = this.ytdlCore.getFormats(id)
     return await this.cachedYTDLCore[id]
   }
 
-  any = async (source: string): Promise<YoutubeDL> => {
-    this.log(source)
-    return await this.youtubeDL.info(source)
+  any = async (text: string): Promise<YoutubeDL> => {
+    const url = this.filterURL(text)
+
+    this.log(url)
+    return await this.youtubeDL.info(url)
   }
 }

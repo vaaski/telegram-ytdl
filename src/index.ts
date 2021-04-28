@@ -6,7 +6,7 @@ import { Telegraf } from "telegraf"
 import got from "got"
 
 import setup from "./setup"
-import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX, URL_REGEX } from "./constants"
+import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX } from "./constants"
 import strings from "./strings"
 import Downloader from "./downloader"
 import actionHandler from "./actionHandler"
@@ -39,13 +39,13 @@ import Notifier from "./notify"
 
     const youtube = YOUTUBE_REGEX.exec(text)?.[1] || ""
     if (youtube) {
-      ctx.youtube = youtube
+      ctx.youtube = text
       return next()
     }
 
     const tiktok = TIKTOK_REGEX.test(text)
     if (tiktok) {
-      ctx.tiktok = URL_REGEX.exec(text)?.[0]
+      ctx.tiktok = text
       if (ctx.tiktok) return next()
     }
 
