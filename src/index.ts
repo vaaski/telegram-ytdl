@@ -31,6 +31,12 @@ import Notifier from "./notify"
     next()
   })
 
+  //? handle the initial /start command
+  bot.command("start", ctx => {
+    ctx.replyWithHTML(strings.start(ctx.name))
+  })
+  bot.telegram.setMyCommands([{ command: "start", description: strings.startDescription() }])
+
   //? extend the context
   bot.on("text", async (ctx, next) => {
     const text = ctx.message?.text
@@ -107,11 +113,6 @@ import Notifier from "./notify"
   })
 
   actionHandler(bot, downloader, log.extend("actionHandler"))
-
-  bot.command("start", ctx => {
-    ctx.replyWithHTML(strings.start(ctx.name))
-  })
-  bot.telegram.setMyCommands([{ command: "start", description: strings.startDescription() }])
 
   await bot.launch()
   console.log("bot launched")
