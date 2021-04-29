@@ -5,14 +5,14 @@
 [![Telegram Bot](https://img.shields.io/badge/TELEGRAM-BOT-%2330A3E6?style=for-the-badge&logo=telegram)](https://t.me/vYTDL_bot)
 ![GitHub top language](https://img.shields.io/github/languages/top/vaaski/telegram-ytdl?style=for-the-badge)
 
----
+## synopsis
 
 I was never satisfied with any YouTube downloader solution, because they either required chasing some website that was
 either bloated with ads, painfully slow, taken down the next day or all of those combined.
 Using [youtube-dl](https://github.com/ytdl-org/youtube-dl) in the command line was my go-to,
 but doesn't really work great on mobile.
 
-#### So I made this bot, to have the videos right where I'd send them anyway, fast and effortless.
+**So I made this bot, to have the videos right on the platform where I'd send them anyway, fast and effortless.**
 
 It uses [ytdl-core](https://github.com/fent/node-ytdl-core) under the hood to get the stream URL of YouTube videos,
 because from my testing it proved substantially faster then [youtube-dl](https://github.com/ytdl-org/youtube-dl).
@@ -25,7 +25,7 @@ TikTok support was also added using [youtube-dl](https://github.com/fent/node-yt
 
 This is designed to be as easy and fast as possible: **Just send a YouTube or TikTok link to the bot.**
 
-Thats it!
+Thats it! The bot may ask you if you want your YouTube video in mp3 or mp4 format, but it downloads both in the background right away.
 
 ## contributing
 
