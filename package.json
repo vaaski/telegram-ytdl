@@ -42,6 +42,6 @@
     "fs-jetpack": "^4.1.0",
     "got": "^11.8.2",
     "telegraf": "^4.3.0",
-    "ytdl-core": "^4.7.0"
+    "ytdl-core": "^4.8.1"
   }
 }
