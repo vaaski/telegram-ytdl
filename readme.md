@@ -16,7 +16,7 @@ but doesn't really work great on mobile.
 
 It uses [ytdl-core](https://github.com/fent/node-ytdl-core) under the hood to get the stream URL of YouTube videos,
 because from my testing it proved substantially faster then [youtube-dl](https://github.com/ytdl-org/youtube-dl).
-The bot then gives the highest-quality stream URL that combines audio and video (usually 720p) and gives it directly to
+The bot then takes the highest-quality stream URL that combines audio and video (usually 720p) and gives it directly to
 telegram, so that it's never downloaded to my server, which greatly improves speed.
 
 TikTok support was also added using [youtube-dl](https://github.com/fent/node-ytdl-core).
