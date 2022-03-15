@@ -15,6 +15,15 @@ export const removeHashtags = (str: string): string =>
 export const bold = (s: string): string => `<b>${s}</b>`
 export const code = (s: string): string => `<code>${s}</code>`
 
+export const once = <A extends any[], R, T>(
+  fn: (this: T, ...arg: A) => R
+): ((this: T, ...arg: A) => R | undefined) => {
+  let done = false
+  return function (this: T, ...args: A) {
+    return done ? void 0 : ((done = true), fn.apply(this, args))
+  }
+}
+
 // interface shortenerResponse {
 //   slug: string
 //   target: string

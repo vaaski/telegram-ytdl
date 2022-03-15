@@ -38,6 +38,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "@resync-tv/yt-dl": "^0.1.6",
     "execa": "^5.1.1",
     "fs-jetpack": "^4.3.1",
     "got": "^11.8.3",

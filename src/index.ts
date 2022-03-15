@@ -3,7 +3,6 @@ import type { ExtendedContext } from "../types"
 
 import debug from "debug"
 import { Telegraf } from "telegraf"
-import got from "got"
 
 import setup from "./setup"
 import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX } from "./constants"
@@ -74,7 +73,7 @@ import Notifier from "./notify"
       })
       try {
         await downloader.youtube(ctx.youtube)
-      } catch (error) {
+      } catch (error: any) {
         log(error)
         notifier.error(error)
         ctx.reply(strings.error(), { disable_web_page_preview: true })
@@ -86,23 +85,23 @@ import Notifier from "./notify"
 
       try {
         const download = await downloader.any(ctx.tiktok)
-        const format = download.formats[0]
-        const description = removeHashtags(download.description)
+        const format = download.formats.find(format => format.format_note === "Direct video")
+        const description = removeHashtags(download.videoDetails.description ?? "")
         const filename = filenameify(description)
 
         if (!format) throw Error("no downloadable format found")
 
-        const source = got.stream(format.url, {
-          headers: { ...format.http_headers },
-        })
+        const { url } = format
+        const file = { url, filename }
 
-        const file = { source, filename }
+        log(file)
+
         ctx.replyWithVideo(file, {
           caption: description,
           reply_to_message_id: ctx.message.message_id,
           supports_streaming: true,
         })
-      } catch (error) {
+      } catch (error: any) {
         log(error)
         notifier.error(error)
         ctx.reply(strings.error(), { disable_web_page_preview: true })

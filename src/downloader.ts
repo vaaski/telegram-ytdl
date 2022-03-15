@@ -1,11 +1,11 @@
 import type { FilteredFormat } from "../types"
-import type { YoutubeDL } from "../types/YoutubeDL"
 
 import debug from "debug"
 import { getVideoID } from "ytdl-core"
 import youtubeDL from "./youtube-dl"
 import ytdlCore from "./ytdl-core"
 import { URL_REGEX } from "./constants"
+import { yt_dl } from "@resync-tv/yt-dl"
 
 export interface CachedDownload {
   [key: string]: FilteredFormat | Promise<FilteredFormat>
@@ -48,7 +48,7 @@ export default class Downloader {
     return await this.cachedYTDLCore[id]
   }
 
-  any = async (text: string): Promise<YoutubeDL> => {
+  any = async (text: string): Promise<yt_dl.VideoInfo> => {
     const url = this.filterURL(text)
 
     this.log(url)
