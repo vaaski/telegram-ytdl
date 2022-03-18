@@ -23,7 +23,7 @@
   ],
   "devDependencies": {
     "@types/debug": "^4.1.7",
-    "@types/node": "^15.14.9",
+    "@types/node": "^16.11.26",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "commitizen": "^4.2.2",
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@resync-tv/yt-dl": "^0.1.6",
+    "debug": "^4.3.4",
     "execa": "^5.1.1",
     "fs-jetpack": "^4.3.1",
     "got": "^11.8.3",

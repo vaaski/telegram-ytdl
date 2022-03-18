@@ -1,54 +1,80 @@
 import { platform } from "os"
 import { join } from "path"
-import { exists, createWriteStream, copyAsync } from "fs-jetpack"
+import jetpack from "fs-jetpack"
 import got from "got"
-import execa from "execa"
+import { promisify } from "util"
+import { chmod } from "fs"
+import stream from "stream"
 
-const winDL = "https://yt-dl.org/latest/youtube-dl.exe"
-const unixDL = "https://yt-dl.org/latest/youtube-dl"
+import { logger } from "./util"
+const log = logger("setup")
 
-const ensureYoutubeDL = (): Promise<void> => {
-  return new Promise(res => {
-    {
-      let path = join(__dirname, "../youtube-dl.exe")
-      let url = winDL
+interface PlatformBinaries {
+  URL: string
+  filename: string
+}
+const BINARIES: Partial<Record<NodeJS.Platform, PlatformBinaries>> = {
+  win32: {
+    URL: "https://github.com/mikf/gallery-dl/releases/latest/download/gallery-dl.exe",
+    filename: "gallery-dl.exe",
+  },
+  linux: {
+    URL: "https://github.com/mikf/gallery-dl/releases/latest/download/gallery-dl.bin",
+    filename: "gallery-dl",
+  },
+}
 
-      if (platform() !== "win32") {
-        path = join(__dirname, "../youtube-dl")
-        url = unixDL
-      }
+const BIN_PATH = join(__dirname, "..", "bin")
 
-      if (!exists(path)) {
-        console.log("youtube-dl not found, downloading...")
-        const file = createWriteStream(path)
-        const response = got.stream(url)
-        response.pipe(file).on("close", res)
-      } else res()
-    }
-  })
+const pipeline = promisify(stream.pipeline)
+const chmodPromise = promisify(chmod)
+
+const linuxPermissions = (filePath: string) => chmodPromise(filePath, "755")
+
+/**
+ * Ensure the existence of the binaries and/or download/update them.
+ * @returns path to the binary
+ */
+const ensureGalleryDL = async (): Promise<string> => {
+  const downloadUrl = BINARIES[platform()]?.URL
+  const filename = BINARIES[platform()]?.filename
+
+  if (!downloadUrl || !filename) throw Error("unsupported platform")
+
+  jetpack.dir(BIN_PATH)
+  const filePath = join(BIN_PATH, filename)
+  if (jetpack.exists(filePath)) {
+    log(`found binary at ${filePath}`)
+
+    return filePath
+  }
+
+  log("downloading binary")
+  await pipeline(got.stream(downloadUrl), jetpack.createWriteStream(filePath))
+
+  if (platform() === "linux") await linuxPermissions(filePath)
+  return filePath
 }
 
 const cloneDotEnv = async () => {
   const path = join(__dirname, "../.env")
 
-  if (!exists(path)) {
+  if (!jetpack.exists(path)) {
     console.log(".env file not found, copying example...")
-    await copyAsync(join(__dirname, "../.env.example"), path)
+    await jetpack.copyAsync(join(__dirname, "../.env.example"), path)
   }
 }
 
-export default async (): Promise<string> => {
-  await ensureYoutubeDL()
-  if (platform() !== "win32")
-    await execa.command("chmod a+rx " + join(__dirname, "../youtube-dl"))
-
-  await cloneDotEnv()
+export default async () => {
+  const galleryDLPath = await ensureGalleryDL()
 
   const BOT_TOKEN = process.env.BOT_TOKEN
   if (!BOT_TOKEN) {
+    await cloneDotEnv()
+
     console.log("BOT_TOKEN required, please include it in the .env file.")
     return process.exit(1)
   }
 
-  return BOT_TOKEN
+  return { BOT_TOKEN, galleryDLPath }
 }

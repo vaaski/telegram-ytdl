@@ -1,16 +1,16 @@
 import type { VideoInfo } from "@resync-tv/yt-dl/types"
 import type { FilteredFormat } from "../types"
+import type { yt_dl } from "@resync-tv/yt-dl"
 
 import { URL } from "url"
-import debug from "debug"
 
 import { TELEGRAM_BOT_LIMIT } from "./constants"
 
-// import * as ytdl_core from "ytdl-core"
-import YT_DL, { yt_dl, adapters, ensureBinaries } from "@resync-tv/yt-dl"
+import YT_DL, { adapters, ensureBinaries } from "@resync-tv/yt-dl"
 import { once } from "./util"
 
-const log = debug("telegram-ytdl:youtube-dl")
+import { logger } from "./util"
+const log = logger("youtube-dl")
 
 const ytdlpAdapter = new adapters.ytdlp()
 const ytdl = new YT_DL([ytdlpAdapter.getInfo], "fallback")

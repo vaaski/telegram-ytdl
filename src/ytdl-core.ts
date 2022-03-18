@@ -1,6 +1,7 @@
+import type { FilteredFormat } from "../types"
+
 import { URL } from "url"
 import * as ytdl_core from "ytdl-core"
-import { FilteredFormat } from "../types"
 import { TELEGRAM_BOT_LIMIT } from "./constants"
 import { getContentLength } from "./util"
 

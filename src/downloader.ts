@@ -1,11 +1,11 @@
 import type { FilteredFormat } from "../types"
+import type { yt_dl } from "@resync-tv/yt-dl"
+import type debug from "debug"
 
-import debug from "debug"
 import { getVideoID } from "ytdl-core"
 import youtubeDL from "./youtube-dl"
 import ytdlCore from "./ytdl-core"
 import { URL_REGEX } from "./constants"
-import { yt_dl } from "@resync-tv/yt-dl"
 
 export interface CachedDownload {
   [key: string]: FilteredFormat | Promise<FilteredFormat>

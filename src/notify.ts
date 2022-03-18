@@ -1,6 +1,6 @@
 import type { ExtendedContext } from "../types"
+import type { Telegraf } from "telegraf"
 
-import { Telegraf } from "telegraf"
 import { bold, code } from "./util"
 
 const ADMIN_CHAT = process.env.ADMIN_CHAT || ""

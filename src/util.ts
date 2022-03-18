@@ -1,4 +1,8 @@
 import got from "got"
+import debug from "debug"
+
+const log = debug("telegram-ytdl")
+export const logger = (namespace: string): debug.Debugger => log.extend(namespace)
 
 export const getContentLength = async (url: string): Promise<number> => {
   const data = await got.head(url)
@@ -33,7 +37,7 @@ export const once = <A extends any[], R, T>(
 //   try {
 //     const json = { target }
 //     const data = (await got
-//       .post("https://shr.li/@/create", { json, timeout: 2000 })
+//       .post("https://shr.li./create", { json, timeout: 2000 })
 //       .json()) as shortenerResponse
 
 //     return `https://shr.li/${data.slug}`

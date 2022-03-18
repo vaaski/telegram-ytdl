@@ -9,12 +9,12 @@ import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX } from "./constants"
 import strings from "./strings"
 import Downloader from "./downloader"
 import actionHandler from "./actionHandler"
-import { filenameify, removeHashtags } from "./util"
 import Notifier from "./notify"
+import tiktok from "./tiktok"
 
 !(async () => {
   const log = debug("telegram-ytdl")
-  const BOT_TOKEN = await setup()
+  const { BOT_TOKEN } = await setup()
 
   const bot = new Telegraf<ExtendedContext>(BOT_TOKEN)
   const downloader = new Downloader(log)
@@ -80,35 +80,7 @@ import Notifier from "./notify"
       }
     }
 
-    if (ctx.tiktok) {
-      const reply = await ctx.replyWithHTML(strings.downloading("from tiktok"))
-
-      try {
-        const download = await downloader.any(ctx.tiktok)
-        const format = download.formats.find(format => format.format_note === "Direct video")
-        const description = removeHashtags(download.videoDetails.description ?? "")
-        const filename = filenameify(description)
-
-        if (!format) throw Error("no downloadable format found")
-
-        const { url } = format
-        const file = { url, filename }
-
-        log(file)
-
-        ctx.replyWithVideo(file, {
-          caption: description,
-          reply_to_message_id: ctx.message.message_id,
-          supports_streaming: true,
-        })
-      } catch (error: any) {
-        log(error)
-        notifier.error(error)
-        ctx.reply(strings.error(), { disable_web_page_preview: true })
-      } finally {
-        bot.telegram.deleteMessage(reply.chat.id, reply.message_id)
-      }
-    }
+    if (ctx.tiktok) tiktok(ctx, bot, downloader, notifier)
   })
 
   actionHandler(bot, downloader, log.extend("actionHandler"))

@@ -1,11 +1,11 @@
-import { Telegraf } from "telegraf"
+import type { Telegraf } from "telegraf"
+import type debug from "debug"
 
 import strings from "./strings"
 
 import type { ExtendedContext } from "../types"
 import type { CallbackQuery, Message } from "typegram"
 import type Downloader from "./downloader"
-import debug from "debug"
 import { filenameify } from "./util"
 
 export default (

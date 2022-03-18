@@ -3,6 +3,7 @@
     "target": "es2018",
     "module": "commonjs",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Node",
     "outDir": "lib",
     "allowJs": true,
     "strict": true,
@@ -11,7 +12,18 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true
+    "declaration": true,
+    "isolatedModules": true,
+
+    // Don't automatically include anything.
+    // Only include `@types` packages that we need to import.
+    "types": ["@types/node"],
+
+    "baseUrl": ".",
+    "paths": {
+      "/@/*": ["./src/*"],
+      "/$/*": ["./types/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "types/**/*.d.ts"],
 }
