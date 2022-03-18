@@ -3,7 +3,7 @@ import type { Telegraf } from "telegraf"
 
 import { bold, code } from "./util"
 
-const ADMIN_CHAT = process.env.ADMIN_CHAT || ""
+const ADMIN_CHAT = process.env.ADMIN_CHAT ?? ""
 
 export default class Notifier {
   private bot: Telegraf<ExtendedContext>

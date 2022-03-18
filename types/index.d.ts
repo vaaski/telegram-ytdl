@@ -16,4 +16,5 @@ interface ExtendedContext extends Context {
   name: string
   youtube?: string
   tiktok?: string
+  instagram?: string
 }

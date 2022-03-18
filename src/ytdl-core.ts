@@ -14,13 +14,13 @@ export default class ytdlCore {
   }: ytdl_core.videoInfo): Promise<FilteredFormat> => {
     const video = formats
       .filter(({ hasVideo, hasAudio }) => hasVideo && hasAudio)
-      .sort((a, b) => (b.width || 0) - (a.width || 0))[0]
+      .sort((a, b) => (b.width ?? 0) - (a.width ?? 0))[0]
 
     const audio = formats
       .filter(
         ({ hasVideo, hasAudio, container }) => !hasVideo && hasAudio && container === "mp4"
       )
-      .sort((a, b) => (b.audioBitrate || 0) - (a.audioBitrate || 0))[0]
+      .sort((a, b) => (b.audioBitrate ?? 0) - (a.audioBitrate ?? 0))[0]
 
     const expire = Number(new URL(video.url).searchParams.get("expire")) * 1e3
 

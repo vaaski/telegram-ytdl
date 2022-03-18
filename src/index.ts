@@ -4,17 +4,23 @@ import type { ExtendedContext } from "../types"
 import debug from "debug"
 import { Telegraf } from "telegraf"
 
+import {
+  AUDIO_VIDEO_KEYBOARD,
+  YOUTUBE_REGEX,
+  TIKTOK_REGEX,
+  INSTAGRAM_REGEX,
+} from "./constants"
 import setup from "./setup"
-import { AUDIO_VIDEO_KEYBOARD, YOUTUBE_REGEX, TIKTOK_REGEX } from "./constants"
 import strings from "./strings"
 import Downloader from "./downloader"
 import actionHandler from "./actionHandler"
 import Notifier from "./notify"
 import tiktok from "./tiktok"
+import instagram from "./instagram"
 
 !(async () => {
   const log = debug("telegram-ytdl")
-  const { BOT_TOKEN } = await setup()
+  const { BOT_TOKEN, galleryDLPath } = await setup()
 
   const bot = new Telegraf<ExtendedContext>(BOT_TOKEN)
   const downloader = new Downloader(log)
@@ -24,7 +30,7 @@ import tiktok from "./tiktok"
   bot.use(async (ctx, next) => {
     if (ctx.from?.is_bot) return
 
-    const name = `@${ctx.from?.username}` || `${ctx.from?.first_name} ${ctx.from?.last_name}`
+    const name = `@${ctx.from?.username} - ${ctx.from?.first_name} ${ctx.from?.last_name}`
     ctx.name = name
 
     next()
@@ -42,7 +48,7 @@ import tiktok from "./tiktok"
     const messageLog = `[${ctx.name}](${ctx.message?.message_id}) ${text}`
     log(messageLog)
 
-    const youtube = YOUTUBE_REGEX.exec(text)?.[1] || ""
+    const youtube = YOUTUBE_REGEX.exec(text)?.[1] ?? ""
     if (youtube) {
       ctx.youtube = text
       return next()
@@ -52,6 +58,12 @@ import tiktok from "./tiktok"
     if (tiktok) {
       ctx.tiktok = text
       if (ctx.tiktok) return next()
+    }
+
+    const instagram = INSTAGRAM_REGEX.test(text)
+    if (instagram) {
+      ctx.instagram = text
+      if (ctx.instagram) return next()
     }
 
     if (ctx.chat.type !== "private") return
@@ -81,6 +93,7 @@ import tiktok from "./tiktok"
     }
 
     if (ctx.tiktok) tiktok(ctx, bot, downloader, notifier)
+    if (ctx.instagram) instagram(ctx, bot, downloader, notifier, galleryDLPath)
   })
 
   actionHandler(bot, downloader, log.extend("actionHandler"))

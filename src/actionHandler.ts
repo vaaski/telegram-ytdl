@@ -27,7 +27,7 @@ export default (
     if (!text) throw Error("no text in callbackQuery reply-to message")
 
     const { message } = ctx.callbackQuery
-    if (!message?.chat.id || !message?.message_id) throw Error("message has no ids")
+    if (!message?.chat.id ?? !message?.message_id) throw Error("message has no ids")
 
     ctx.answerCbQuery(strings.downloading(`as ${type}`))
     bot.telegram.deleteMessage(message.chat.id, message.message_id)

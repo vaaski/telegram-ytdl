@@ -5,6 +5,7 @@ import type { Telegraf } from "telegraf"
 
 import { filenameify, removeHashtags } from "./util"
 import strings from "./strings"
+import { MAX_FILENAME_LENGTH } from "./constants"
 
 import { logger } from "./util"
 const log = logger("tiktok")
@@ -21,7 +22,7 @@ export default async (
     const download = await downloader.any(ctx.tiktok ?? "")
     const format = download.formats.find(format => format.format_note === "Direct video")
     const description = removeHashtags(download.videoDetails.description ?? "")
-    const filename = filenameify(description)
+    const filename = filenameify(description).slice(0, MAX_FILENAME_LENGTH)
 
     if (!format) throw Error("no downloadable format found")
 
