@@ -1,5 +1,3 @@
 node_modules
-lib
-.env
-/youtube-dl*
-bin
+dist
+.DS_Store

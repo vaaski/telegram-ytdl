@@ -3,27 +3,34 @@
   "env": {
     "es2021": true,
     "node": true,
-    "browser": false
+    "browser": true
   },
   "extends": [
     "eslint:recommended",
-    /** @see https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#recommended-configs */
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:unicorn/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
-  "ignorePatterns": ["node_modules/**", "**/dist/**"],
+  "plugins": [
+    "@typescript-eslint",
+    "unicorn"
+  ],
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**"
+  ],
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/consistent-type-imports": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "semi": ["error", "never"]
+    "semi": [
+      "error",
+      "never"
+    ],
+    "unicorn/prefer-ternary": "off"
   }
 }

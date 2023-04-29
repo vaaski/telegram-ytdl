@@ -1,0 +1,8 @@
+{
+  "apps": [
+    {
+      "name": "telegram-ytdl",
+      "script": "./dist/index.mjs"
+    }
+  ]
+}

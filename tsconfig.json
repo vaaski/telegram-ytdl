@@ -1,29 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "composite": false,
+    "module": "ESNext",
+    "target": "ESNext",
     "moduleResolution": "Node",
-    "outDir": "lib",
-    "allowJs": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "isolatedModules": true,
-
-    // Don't automatically include anything.
-    // Only include `@types` packages that we need to import.
-    "types": ["@types/node"],
-
-    "baseUrl": ".",
-    "paths": {
-      "/@/*": ["./src/*"],
-      "/$/*": ["./types/*"]
-    }
+    "types": [
+      "@types/node"
+    ],
+    "strict": true,
+    "lib": [
+      "ES6"
+    ]
   },
-  "include": ["src/**/*.ts", "types/**/*.d.ts"],
+  "include": [
+    "src/**/*.ts"
+  ]
 }
