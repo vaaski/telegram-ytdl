@@ -3,7 +3,7 @@
     "src/**/*.ts"
   ],
   "ext": "ts",
-  "exec": "npx tsx",
+  "exec": "npx tsx -r dotenv/config",
   "events": {
     "start": "node -e \"console.clear()\""
   }

@@ -6,15 +6,9 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "types": [
-      "@types/node"
-    ],
+    "types": ["@types/node"],
     "strict": true,
-    "lib": [
-      "ES6"
-    ]
+    "lib": ["ES6"]
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts", "types/**/*.d.ts"]
 }

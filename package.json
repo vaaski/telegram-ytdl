@@ -29,7 +29,7 @@
   },
   "scripts": {
     "test": "echo \"no tests\"",
-    "start": "node ./dist/index.mjs",
+    "start": "node -r dotenv/config ./dist/index.mjs",
     "dev": "nodemon ./src/index.ts",
     "build": "unbuild",
     "format": "prettier --write .",
@@ -48,5 +48,8 @@
     "tsx": "^3.12.6",
     "typescript": "^5.0.4",
     "unbuild": "^1.2.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
   }
 }
