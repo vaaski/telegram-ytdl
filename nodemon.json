@@ -6,5 +6,8 @@
   "exec": "npx tsx -r dotenv/config",
   "events": {
     "start": "node -e \"console.clear()\""
+  },
+  "env": {
+    "DEBUG": "grammy*"
   }
 }
