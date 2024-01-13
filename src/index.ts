@@ -30,7 +30,8 @@ import instagram from "./instagram"
   bot.use(async (ctx, next) => {
     if (ctx.from?.is_bot) return
 
-    const name = `@${ctx.from?.username} - ${ctx.from?.first_name} ${ctx.from?.last_name}`
+    let name = `@${ctx.from?.username} - ${ctx.from?.first_name} ${ctx.from?.last_name}`
+    name = `<a href="tg://user?id=${ctx.from?.id}">${name}</a>`
     ctx.name = name
 
     next()
@@ -74,6 +75,8 @@ import instagram from "./instagram"
 
   //? initial reply
   bot.on("text", async ctx => {
+    notifier.notify(`${ctx.name} ${ctx.message?.text}`)
+
     if (ctx.youtube) {
       const extra: ExtraReplyMessage & ExtraEditMessageText = {
         reply_markup: AUDIO_VIDEO_KEYBOARD,
