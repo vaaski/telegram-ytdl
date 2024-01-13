@@ -1,10 +1,21 @@
-import { Bot } from "grammy"
+import { bot } from "./bot"
+import { bold } from "./textutil"
 
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
-if (!TELEGRAM_BOT_TOKEN) throw new Error("TELEGRAM_BOT_TOKEN is missing")
+bot.on("message:text", async (ctx) => {
+  if (ctx.chat.type !== "private") return
 
-const bot = new Bot(TELEGRAM_BOT_TOKEN)
+  await ctx.replyWithHTML(
+    [
+      bold("The Bot is currently down for maintenance."),
+      "",
+      "In the meantime, I recommend checking out yt-dlp, the command line tool that powers this bot.",
+      "github.com/yt-dlp/yt-dlp",
+    ].join("\n"),
+    {
+      link_preview_options: { is_disabled: true },
+    }
+  )
+})
 
-bot.on("message", (ctx) => ctx.reply("Hi there!"))
-
+console.log("Starting bot...")
 bot.start()

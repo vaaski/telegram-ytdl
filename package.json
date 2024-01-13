@@ -22,6 +22,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@grammyjs/parse-mode": "^1.9.0",
     "grammy": "^1.20.3"
   }
 }
