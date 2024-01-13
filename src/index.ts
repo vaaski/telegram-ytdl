@@ -1,9 +1,12 @@
 import { bot } from "./bot"
 import { bold } from "./textutil"
 
-bot.on("message:text", async (ctx) => {
-  if (ctx.chat.type !== "private") return
+bot.use(async (ctx, next) => {
+  if (ctx.chat?.type === "private") await next()
+  else return
+})
 
+bot.on("message:text", async (ctx) => {
   await ctx.replyWithHTML(
     [
       bold("The Bot is currently down for maintenance."),
