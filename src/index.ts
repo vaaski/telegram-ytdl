@@ -30,8 +30,13 @@ import instagram from "./instagram"
   bot.use(async (ctx, next) => {
     if (ctx.from?.is_bot) return
 
-    let name = `@${ctx.from?.username} - ${ctx.from?.first_name} ${ctx.from?.last_name}`
+    const username = ctx.from?.username ?? ""
+    const first_name = ctx.from?.first_name ?? ""
+    const last_name = ctx.from?.last_name ?? ""
+
+    let name = `@${username} - ${first_name} ${last_name}`
     name = `<a href="tg://user?id=${ctx.from?.id}">🔗</a> ${name}`
+
     ctx.name = name
 
     next()
