@@ -20,5 +20,8 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "grammy": "^1.20.3"
   }
 }

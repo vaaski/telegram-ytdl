@@ -7,5 +7,15 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:unicorn/recommended",
     "prettier"
-  ]
+  ],
+  "rules": {
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "allowList": {
+          "ctx": true
+        }
+      }
+    ]
+  }
 }
