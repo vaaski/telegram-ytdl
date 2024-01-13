@@ -31,7 +31,7 @@ import instagram from "./instagram"
     if (ctx.from?.is_bot) return
 
     let name = `@${ctx.from?.username} - ${ctx.from?.first_name} ${ctx.from?.last_name}`
-    name = `<a href="tg://user?id=${ctx.from?.id}">${name}</a>`
+    name = `<a href="tg://user?id=${ctx.from?.id}">🔗</a> ${name}`
     ctx.name = name
 
     next()
