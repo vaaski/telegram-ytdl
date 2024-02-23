@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "telegram-ytdl-2024",
-      "script": "bun run src/index.ts"
+      "script": "npx tsx -r dotenv/config src/index.ts"
     }
   ]
 }
