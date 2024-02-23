@@ -34,11 +34,16 @@ bot.on("message:text").on("::url", async (ctx, next) => {
   if (!url) return next()
 
   const processingMessage = await ctx.replyWithHTML("Processing...")
-  ctx.forwardMessage(ADMIN_ID, { disable_notification: true }).then(async (forwarded) => {
-    await bot.api.setMessageReaction(forwarded.chat.id, forwarded.message_id, [
-      { type: "emoji", emoji: "🤝" },
-    ])
-  })
+
+  if (ctx.chat.id !== ADMIN_ID) {
+    ctx
+      .forwardMessage(ADMIN_ID, { disable_notification: true })
+      .then(async (forwarded) => {
+        await bot.api.setMessageReaction(forwarded.chat.id, forwarded.message_id, [
+          { type: "emoji", emoji: "🤝" },
+        ])
+      })
+  }
 
   queue.add(async () => {
     try {
