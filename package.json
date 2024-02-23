@@ -5,6 +5,7 @@
   "scripts": {
     "start": "tsx -r dotenv/config src/index.ts",
     "dev": "tsx watch -r dotenv/config src/index.ts",
+    "build": "docker build -t telegram-ytdl .",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts"
   },

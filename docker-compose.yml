@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  app:
+    image: telegram-ytdl
+    environment:
+      # get your bot token from @BotFather
+      TELEGRAM_BOT_TOKEN: ""
+
+      # comma separated list of telegram user ids
+      WHITELISTED_IDS: ""
+
+      # admin user id
+      ADMIN_ID: ""
+
+      TELEGRAM_API_ROOT: "http://127.0.0.1:8081"
+      TELEGRAM_WEBHOOK_PORT: "7796"
+      TELEGRAM_WEBHOOK_URL: "http://127.0.0.1:7796"
+
+    # idk if it works without this, haven't bothered to test
+    network_mode: host
+    restart: unless-stopped
