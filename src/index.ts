@@ -1,6 +1,12 @@
 import { bot } from "./setup"
 import { bold, link } from "./textutil"
 
+bot.use(async (ctx, next) => {
+  if (ctx.chat?.type !== "private") return
+
+  await next()
+})
+
 bot.on("message:text", async (ctx) => {
   await ctx.replyWithHTML(
     [
