@@ -23,7 +23,10 @@ bot.on("message:text", async (ctx, next) => {
     link_preview_options: { is_disabled: true },
   })
 
-  ctx.forwardMessage(ADMIN_ID, { disable_notification: true })
+  const forwarded = await ctx.forwardMessage(ADMIN_ID, { disable_notification: true })
+  await bot.api.setMessageReaction(forwarded.chat.id, forwarded.message_id, [
+    { type: "emoji", emoji: "🖕" },
+  ])
 })
 
 bot.on("message:text").on("::url", async (ctx, next) => {
@@ -31,7 +34,11 @@ bot.on("message:text").on("::url", async (ctx, next) => {
   if (!url) return next()
 
   const processingMessage = await ctx.replyWithHTML("Processing...")
-  ctx.forwardMessage(ADMIN_ID, { disable_notification: true })
+  ctx.forwardMessage(ADMIN_ID, { disable_notification: true }).then(async (forwarded) => {
+    await bot.api.setMessageReaction(forwarded.chat.id, forwarded.message_id, [
+      { type: "emoji", emoji: "🤝" },
+    ])
+  })
 
   queue.add(async () => {
     try {
