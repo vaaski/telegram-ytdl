@@ -37,7 +37,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
     try {
       const { stdout } = await execa("yt-dlp", [
         "-f",
-        `b[filesize_approx<${2e9}]`,
+        `b`,
         "--no-playlist",
         "-J",
         url.text,
