@@ -2,7 +2,7 @@ import { execa } from "execa"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./botutil"
 import { deniedMessage } from "./constants"
-import { WHITELISTED_IDS } from "./environment"
+import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { parseYtDlpInfo } from "./yt-dlp"
@@ -22,6 +22,8 @@ bot.on("message:text", async (ctx, next) => {
   await ctx.replyWithHTML(deniedMessage, {
     link_preview_options: { is_disabled: true },
   })
+
+  ctx.forwardMessage(ADMIN_ID, { disable_notification: true })
 })
 
 bot.on("message:text").on("::url", async (ctx, next) => {
@@ -29,6 +31,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
   if (!url) return next()
 
   const processingMessage = await ctx.replyWithHTML("Processing...")
+  ctx.forwardMessage(ADMIN_ID, { disable_notification: true })
 
   queue.add(async () => {
     try {
