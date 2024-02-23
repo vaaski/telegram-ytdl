@@ -14,8 +14,8 @@ services:
       ADMIN_ID: ""
 
       TELEGRAM_API_ROOT: "http://127.0.0.1:8081"
-      TELEGRAM_WEBHOOK_PORT: "7796"
-      TELEGRAM_WEBHOOK_URL: "http://127.0.0.1:7796"
+      TELEGRAM_WEBHOOK_PORT: "8443"
+      TELEGRAM_WEBHOOK_URL: "http://127.0.0.1:8443"
 
     # idk if it works without this, haven't bothered to test
     network_mode: host
