@@ -62,6 +62,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
       if (download.vcodec) {
         await ctx.replyWithVideo(new InputFile({ url: download.url }), {
           caption: parsed.title,
+          supports_streaming: true,
           reply_parameters: {
             message_id: ctx.message?.message_id,
             allow_sending_without_reply: true,
