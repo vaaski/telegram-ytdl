@@ -8,15 +8,14 @@ services:
       TELEGRAM_BOT_TOKEN: ""
 
       # comma separated list of telegram user ids
-      WHITELISTED_IDS: ""
+      WHITELISTED_IDS: "123456789,987654321"
 
       # admin user id
-      ADMIN_ID: ""
+      ADMIN_ID: "123456789"
 
       TELEGRAM_API_ROOT: "http://127.0.0.1:8081"
       TELEGRAM_WEBHOOK_PORT: "8443"
       TELEGRAM_WEBHOOK_URL: "http://127.0.0.1:8443"
 
-    # idk if it works without this, haven't bothered to test
     network_mode: host
     restart: unless-stopped
