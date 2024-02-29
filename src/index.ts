@@ -5,6 +5,7 @@ import { deniedMessage } from "./constants"
 import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
 import { Queue } from "./queue"
 import { bot } from "./setup"
+import { removeHashtagsMentions } from "./textutil"
 import { parseYtDlpInfo } from "./yt-dlp"
 
 const queue = new Queue()
@@ -61,7 +62,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 
       if (download.vcodec) {
         await ctx.replyWithVideo(new InputFile({ url: download.url }), {
-          caption: parsed.title,
+          caption: removeHashtagsMentions(parsed.title),
           supports_streaming: true,
           reply_parameters: {
             message_id: ctx.message?.message_id,
