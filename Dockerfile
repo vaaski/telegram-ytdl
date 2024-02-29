@@ -18,10 +18,12 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g pnpm && pnpm install --frozen-lockfile && apk add python3
+RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN pnpm install --frozen-lockfile
 
 COPY src ./src
 
+RUN apk add python3
 ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp /bin/yt-dlp
 RUN chmod +x /bin/yt-dlp
 
