@@ -1,0 +1,32 @@
+name: Verify Pull Request
+
+on:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@main
+
+      - name: "Setup Node 20"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: "Install dependencies"
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: |
+            - args: [--frozen-lockfile]
+
+      - name: "Run typecheck"
+        run: pnpm run typecheck
+
+      - name: "Run eslint"
+        run: pnpm run lint
+
+      - name: "Build Image"
+        run: docker build . --tag ghcr.io/vaaski/telegram-ytdl:latest
