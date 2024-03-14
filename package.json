@@ -20,7 +20,7 @@
     "eslint-plugin-unicorn": "^51.0.1",
     "prettier": "^3.2.1",
     "tsx": "^4.7.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -28,7 +28,7 @@
   "dependencies": {
     "@grammyjs/parse-mode": "^1.9.0",
     "@resync-tv/yt-dlp": "^0.2.1",
-    "express": "^4.18.2",
+    "express": "^4.18.3",
     "grammy": "^1.21.1"
   }
 }
