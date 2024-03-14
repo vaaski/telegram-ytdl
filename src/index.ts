@@ -1,4 +1,3 @@
-import { execa } from "execa"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./botutil"
 import { deniedMessage } from "./constants"
@@ -6,7 +5,7 @@ import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { removeHashtagsMentions } from "./textutil"
-import { parseYtDlpInfo } from "./yt-dlp"
+import { getInfo } from "@resync-tv/yt-dlp"
 
 const queue = new Queue()
 
@@ -48,21 +47,14 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 
   queue.add(async () => {
     try {
-      const { stdout } = await execa("yt-dlp", [
-        "-f",
-        `b`,
-        "--no-playlist",
-        "-J",
-        url.text,
-      ])
+      const info = await getInfo(url.text, ["-f", "b", "--no-playlist"])
 
-      const parsed = parseYtDlpInfo(stdout)
-      const [download] = parsed.requested_downloads ?? []
+      const [download] = info.requested_downloads ?? []
       if (!download || !download.url) throw new Error("No download available")
 
       if (download.vcodec) {
         await ctx.replyWithVideo(new InputFile({ url: download.url }), {
-          caption: removeHashtagsMentions(parsed.title),
+          caption: removeHashtagsMentions(info.title),
           supports_streaming: true,
           reply_parameters: {
             message_id: ctx.message?.message_id,
