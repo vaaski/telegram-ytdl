@@ -5,7 +5,7 @@ import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { removeHashtagsMentions } from "./textutil"
-import { getInfo } from "@resync-tv/yt-dlp"
+import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 
 const queue = new Queue()
 
@@ -52,8 +52,10 @@ bot.on("message:text").on("::url", async (ctx, next) => {
       const [download] = info.requested_downloads ?? []
       if (!download || !download.url) throw new Error("No download available")
 
-      if (download.vcodec) {
-        await ctx.replyWithVideo(new InputFile({ url: download.url }), {
+      if (download.vcodec || download.ext === "mp4") {
+        const stream = streamFromInfo(info)
+
+        await ctx.replyWithVideo(new InputFile(stream.stdout), {
           caption: removeHashtagsMentions(info.title),
           supports_streaming: true,
           reply_parameters: {
