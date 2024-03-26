@@ -11,5 +11,5 @@ export const deniedMessage = [
       `a simplified wrapper I built for yt-dlp.`
   ),
   "",
-  "If you think you don't fit into the group of people mentioned above, you can contact @vaaski to get whitelisted.",
+  `${bold("Do not")} try to contact me to get whitelisted, I will no longer accept anyone I don't know personally.`,
 ].join("\n")
