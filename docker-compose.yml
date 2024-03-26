@@ -1,8 +1,10 @@
 version: "3.9"
 
 services:
-  app:
-    image: telegram-ytdl
+  telegram-bot:
+    image: ghcr.io/vaaski/telegram-ytdl:latest
+    network_mode: host
+    restart: unless-stopped
     environment:
       # get your bot token from @BotFather
       TELEGRAM_BOT_TOKEN: ""
@@ -17,5 +19,23 @@ services:
       TELEGRAM_WEBHOOK_PORT: "8443"
       TELEGRAM_WEBHOOK_URL: "http://127.0.0.1:8443"
 
+  telegram-bot-api:
+    image: ghcr.io/bots-house/docker-telegram-bot-api:latest
     network_mode: host
     restart: unless-stopped
+    environment:
+      # get these values from https://core.telegram.org/api/obtaining_api_id
+      TELEGRAM_API_ID: ""
+      TELEGRAM_API_HASH: ""
+    command:
+      - --dir=/var/lib/telegram-bot-api
+      #- --verbosity=2
+      - --local
+    volumes:
+      - server-data:/var/lib/telegram-bot-api
+    ports:
+      - 8081:8081
+
+volumes:
+  server-data:
+    driver: local

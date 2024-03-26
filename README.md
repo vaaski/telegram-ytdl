@@ -19,6 +19,38 @@ format that contains both video and audio. This is meant to work together with a
 Telegram bot API server, so that the upload limit for bots is increased from 50MB to 2GB.
 
 The instance hosted by me is no longer available for public use, but you can simply host your own instance.
-Instructions are coming soon™.
+
+## Hosting
+
+To host your own instance of this bot, you need to have a Telegram bot token, Telegram API Token
+and a server to run the bot on. You can create a Telegram bot with [BotFather][botfather] and purchase
+a cheap VPS with the hoster of your choice.
+
+I recommend [Hetzner][hetzner] and you can get 20€ in credits for free using my [referral link](hetzner).
+
+### Installation
+
+- [Install Docker](https://docs.docker.com/engine/install)
+- Create a folder and put the [docker-compose.yml](./docker-compose.yml) into it.
+- Fill out and adjust the following variables in the docker-compose.yml file:
+
+  | Variable                | Description                                                                                                    |
+  | ----------------------- | -------------------------------------------------------------------------------------------------------------- |
+  | `TELEGRAM_BOT_TOKEN`    | Your Telegram bot token (get it from [BotFather][botfather])                                                   |
+  | `WHITELISTED_IDS`       | A comma-separated list of Telegram user IDs that are allowed to use the bot (get them from [this bot][id-bot]) |
+  | `ADMIN_ID`              | Your Telegram user ID (get it from [this bot][id-bot])                                                         |
+  | `TELEGRAM_API_ID`       | Your Telegram API ID (get it [here][telegram-api-id])                                                          |
+  | `TELEGRAM_API_HASH`     | Your Telegram API hash (get it [here][telegram-api-id])                                                        |
+  | `TELEGRAM_API_ROOT`     | The URL of your Telegram bot API server (can probably be left unchanged)                                       |
+  | `TELEGRAM_WEBHOOK_PORT` | The port the bot will listen on (can probably be left unchanged)                                               |
+  | `TELEGRAM_WEBHOOK_URL`  | The URL of your Telegram bot API server (can probably be left unchanged)                                       |
+
+- Run `docker compose up -d` in the folder you created.
+
+If you have any problems with hosting please don't open an Issue, but rather contact me directly.
 
 [yt-dlp]: https://github.com/yt-dlp/yt-dlp
+[telegram-api-id]: https://core.telegram.org/api/obtaining_api_id
+[id-bot]: https://t.me/getidsbot
+[botfather]: https://t.me/BotFather
+[hetzner]: https://hetzner.cloud/?ref=e5ntAQJVvxX1
