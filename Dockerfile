@@ -24,7 +24,7 @@ RUN pnpm install --frozen-lockfile
 COPY src ./src
 
 RUN apk add python3
-ADD https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp /bin/yt-dlp
+ADD https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp_linux /bin/yt-dlp
 RUN chmod +x /bin/yt-dlp
 
 EXPOSE ${TELEGRAM_WEBHOOK_PORT}
