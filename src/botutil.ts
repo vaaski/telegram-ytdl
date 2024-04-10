@@ -1,4 +1,5 @@
 import type { Chat, Message } from "grammy/types"
+import { ADMIN_ID } from "./environment"
 import { bot } from "./setup"
 
 export const deleteMessage = (message: Message) => {
@@ -9,7 +10,16 @@ export const errorMessage = (chat: Chat, error?: string) => {
   let message = bold("An error occurred.")
   if (error) message += `\n\n${code(error)}`
 
-  return bot.api.sendMessage(chat.id, message, { parse_mode: "HTML" })
+  const tasks = [() => bot.api.sendMessage(chat.id, message, { parse_mode: "HTML" })]
+
+  if (chat.id === ADMIN_ID) {
+    let adminMessage = `Error in chat ${mention("user", chat.id)}`
+    if (error) adminMessage += `\n\n${code(error)}`
+
+    tasks.push(() => bot.api.sendMessage(ADMIN_ID, adminMessage, { parse_mode: "HTML" }))
+  }
+
+  return Promise.all(tasks.map((task) => task()))
 }
 
 // prettier-ignore
