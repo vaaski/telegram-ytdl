@@ -47,7 +47,7 @@ I recommend [Hetzner][hetzner] and you can get 20€ in credits for free using m
 
 - Run `docker compose up -d` in the folder you created.
 
-If you have any problems with hosting please don't open an Issue, but rather contact me directly.
+If you have any problems with hosting feel free to contact me or open an issue.
 
 [yt-dlp]: https://github.com/yt-dlp/yt-dlp
 [telegram-api-id]: https://core.telegram.org/api/obtaining_api_id
