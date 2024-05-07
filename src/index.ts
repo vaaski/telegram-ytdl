@@ -83,6 +83,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 				await ctx.replyWithVideo(video, {
 					caption: title,
 					supports_streaming: true,
+					duration: info.duration,
 					reply_parameters: {
 						message_id: ctx.message?.message_id,
 						allow_sending_without_reply: true,
@@ -97,6 +98,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 					performer: info.uploader,
 					title: info.title,
 					thumbnail: getThumbnail(info.thumbnails),
+					duration: info.duration,
 					reply_parameters: {
 						message_id: ctx.message?.message_id,
 						allow_sending_without_reply: true,
