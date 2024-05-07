@@ -20,10 +20,20 @@ export const getThumbnail = (thumbnails?: Thumbnail[]) => {
 	const reversed = [...thumbnails].reverse()
 
 	const match = reversed.find((thumbnail) => {
-		const { width, height } = thumbnail
-		if (!width || !height) return false
+		const { width, height, resolution } = thumbnail
 
-		return width <= MAX_SIZE && height <= MAX_SIZE
+		if (width && height) {
+			return width <= MAX_SIZE && height <= MAX_SIZE
+		}
+
+		if (resolution) {
+			const [w, h] = resolution.split("x").map((n) => Number.parseInt(n))
+			if (!w || !h) return false
+
+			return w <= MAX_SIZE && h <= MAX_SIZE
+		}
+
+		return false
 	})
 
 	if (match) return new InputFile({ url: match.url })
