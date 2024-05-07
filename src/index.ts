@@ -36,7 +36,9 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 	const [url] = ctx.entities("url")
 	if (!url) return next()
 
-	const processingMessage = await ctx.replyWithHTML("Processing...")
+	const processingMessage = await ctx.replyWithHTML("Processing...", {
+		disable_notification: true,
+	})
 
 	if (ctx.chat.id !== ADMIN_ID) {
 		ctx
