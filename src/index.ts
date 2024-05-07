@@ -1,8 +1,9 @@
 import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
-import { deleteMessage, errorMessage, getThumbnail } from "./botutil"
-import { deniedMessage, tiktokArgs, tiktokMatcher } from "./constants"
+import { deleteMessage, errorMessage } from "./botutil"
+import { deniedMessage, tiktokArgs } from "./constants"
 import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
+import { getThumbnail, urlMatcher } from "./mediautil"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { removeHashtagsMentions } from "./textutil"
@@ -35,7 +36,9 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 	const [url] = ctx.entities("url")
 	if (!url) return next()
 
-	const processingMessage = await ctx.replyWithHTML("Processing...")
+	const processingMessage = await ctx.replyWithHTML("Processing...", {
+		disable_notification: true,
+	})
 
 	if (ctx.chat.id !== ADMIN_ID) {
 		ctx
@@ -51,7 +54,8 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 
 	queue.add(async () => {
 		try {
-			const isTiktok = tiktokMatcher(url.text)
+			const isTiktok = urlMatcher(url.text, "tiktok.com")
+			const isYouTubeMusic = urlMatcher(url.text, "music.youtube.com")
 			const additionalArgs = isTiktok ? tiktokArgs : []
 
 			const info = await getInfo(url.text, [
@@ -66,7 +70,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 
 			const title = removeHashtagsMentions(info.title)
 
-			if (download.vcodec !== "none") {
+			if (download.vcodec !== "none" && !isYouTubeMusic) {
 				let video: InputFile | string
 
 				if (isTiktok) {
@@ -79,6 +83,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 				await ctx.replyWithVideo(video, {
 					caption: title,
 					supports_streaming: true,
+					duration: info.duration,
 					reply_parameters: {
 						message_id: ctx.message?.message_id,
 						allow_sending_without_reply: true,
@@ -93,6 +98,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 					performer: info.uploader,
 					title: info.title,
 					thumbnail: getThumbnail(info.thumbnails),
+					duration: info.duration,
 					reply_parameters: {
 						message_id: ctx.message?.message_id,
 						allow_sending_without_reply: true,
