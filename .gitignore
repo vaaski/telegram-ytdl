@@ -13,6 +13,7 @@ lerna-debug.log*
 # testing things
 *.json
 !pm2.json
+!biome.json
 
 # Caches
 

@@ -1,5 +1,5 @@
 export const removeHashtagsMentions = (text?: string) => {
-  if (!text) return
+	if (!text) return
 
-  return text.replaceAll(/[#@]\S+/g, "").trim()
+	return text.replaceAll(/[#@]\S+/g, "").trim()
 }
