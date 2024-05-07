@@ -1,6 +1,6 @@
 import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
-import { deleteMessage, errorMessage } from "./botutil"
+import { deleteMessage, errorMessage, getThumbnail } from "./botutil"
 import { deniedMessage, tiktokArgs, tiktokMatcher } from "./constants"
 import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
 import { Queue } from "./queue"
@@ -64,7 +64,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 			const [download] = info.requested_downloads ?? []
 			if (!download || !download.url) throw new Error("No download available")
 
-			if (download.vcodec || download.ext === "mp4") {
+			if (download.vcodec !== "none") {
 				let video: InputFile | string
 
 				if (isTiktok) {
@@ -82,8 +82,22 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 						allow_sending_without_reply: true,
 					},
 				})
+			} else if (download.acodec !== "none") {
+				const stream = streamFromInfo(info, ["-x", "--audio-format", "mp3"])
+				const audio = new InputFile(stream.stdout)
+
+				await ctx.replyWithAudio(audio, {
+					caption: removeHashtagsMentions(info.title),
+					performer: info.uploader,
+					title: info.title,
+					thumbnail: getThumbnail(info.thumbnails),
+					reply_parameters: {
+						message_id: ctx.message?.message_id,
+						allow_sending_without_reply: true,
+					},
+				})
 			} else {
-				throw new Error("No video available")
+				throw new Error("No download available")
 			}
 		} catch (error) {
 			return error instanceof Error

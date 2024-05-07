@@ -23,7 +23,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY src ./src
 
-RUN apk add python3
+RUN apk add python3 ffmpeg
 ADD https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp /bin/yt-dlp
 RUN chmod +x /bin/yt-dlp
 
