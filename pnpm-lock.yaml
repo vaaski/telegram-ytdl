@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@grammyjs/parse-mode':
-    specifier: ^1.9.0
-    version: 1.9.0(grammy@1.22.4)
+    specifier: ^1.10.0
+    version: 1.10.0(grammy@1.22.4)
   '@resync-tv/yt-dlp':
     specifier: 0.3.1
-    version: 0.3.1(typescript@5.4.3)
+    version: 0.3.1(typescript@5.4.5)
   express:
     specifier: ^4.19.2
     version: 4.19.2
@@ -32,8 +32,8 @@ devDependencies:
     specifier: ^4.7.2
     version: 4.7.2
   typescript:
-    specifier: ^5.4.3
-    version: 5.4.3
+    specifier: ^5.4.5
+    version: 5.4.5
 
 packages:
 
@@ -332,8 +332,8 @@ packages:
     dev: true
     optional: true
 
-  /@grammyjs/parse-mode@1.9.0(grammy@1.22.4):
-    resolution: {integrity: sha512-c5luhtGQVkby+EJ+P/RLuEJH4+PTuw6Mm1feLM2MjoBIzGVGnPigMKvrgzndnJ6ixsyJtUlhMxuuiWreZRT8Qg==}
+  /@grammyjs/parse-mode@1.10.0(grammy@1.22.4):
+    resolution: {integrity: sha512-ZjbY2Ax0b4Nf8lPz3NV0cWDxUC10kOkzgxws+iTdgG+hAiPQVUnP/oJnAKrW1ZQOWULZYQ4GOR/+aCZHyUuLQA==}
     engines: {node: '>=14.13.1'}
     peerDependencies:
       grammy: ^1.20.1
@@ -345,12 +345,12 @@ packages:
     resolution: {integrity: sha512-7OswNRPN72qFUWhysNrY96+5LKBQXgxqw0iNbleYV7G8GB6ZPVdkwFMIZn1Fda2iRKMYT6S6Sxuel0465VGtHQ==}
     dev: false
 
-  /@resync-tv/yt-dlp@0.3.1(typescript@5.4.3):
+  /@resync-tv/yt-dlp@0.3.1(typescript@5.4.5):
     resolution: {integrity: sha512-xGEaYAiiYaScqb958p+eQEYBs4N4HVawjxxWfIj2rN0qyfwCuscJf2xWwAWM0zZyhvTPQsD9RuyLXQlO/i1IAw==}
     peerDependencies:
       typescript: ^5.0.0
     dependencies:
-      typescript: 5.4.3
+      typescript: 5.4.5
     dev: false
 
   /@types/body-parser@1.19.5:
@@ -991,8 +991,8 @@ packages:
       mime-types: 2.1.35
     dev: false
 
-  /typescript@5.4.3:
-    resolution: {integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==}
+  /typescript@5.4.5:
+    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
