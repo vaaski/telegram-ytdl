@@ -14,3 +14,14 @@ export const deniedMessage = [
   "",
   `${bold("Do not")} try to contact me to get whitelisted, I will no longer accept anyone I don't know personally.`,
 ].join("\n")
+
+export const tiktokMatcher = (url: string) => {
+  const parsed = new URL(url)
+  return parsed.hostname.endsWith("tiktok.com")
+}
+
+// https://github.com/yt-dlp/yt-dlp/issues/9506#issuecomment-2053987537
+export const tiktokArgs = [
+  "--extractor-args",
+  "tiktok:api_hostname=api16-normal-c-useast1a.tiktokv.com;app_info=7355728856979392262",
+]

@@ -1,11 +1,11 @@
+import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./botutil"
-import { deniedMessage } from "./constants"
+import { deniedMessage, tiktokArgs, tiktokMatcher } from "./constants"
 import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { removeHashtagsMentions } from "./textutil"
-import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 
 const queue = new Queue()
 
@@ -47,15 +47,30 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 
   queue.add(async () => {
     try {
-      const info = await getInfo(url.text, ["-f", "b", "--no-playlist"])
+      const isTiktok = tiktokMatcher(url.text)
+      const additionalArgs = isTiktok ? tiktokArgs : []
+
+      const info = await getInfo(url.text, [
+        "-f",
+        "b",
+        "--no-playlist",
+        ...additionalArgs,
+      ])
 
       const [download] = info.requested_downloads ?? []
       if (!download || !download.url) throw new Error("No download available")
 
       if (download.vcodec || download.ext === "mp4") {
-        const stream = streamFromInfo(info)
+        let video: InputFile | string
 
-        await ctx.replyWithVideo(new InputFile(stream.stdout), {
+        if (isTiktok) {
+          const stream = streamFromInfo(info)
+          video = new InputFile(stream.stdout)
+        } else {
+          video = new InputFile({ url: download.url })
+        }
+
+        await ctx.replyWithVideo(video, {
           caption: removeHashtagsMentions(info.title),
           supports_streaming: true,
           reply_parameters: {
