@@ -20,11 +20,6 @@ export const deniedMessage = [
 	)} try to contact me to get whitelisted, I will no longer accept anyone I don't know personally.`,
 ].join("\n")
 
-export const tiktokMatcher = (url: string) => {
-	const parsed = new URL(url)
-	return parsed.hostname.endsWith("tiktok.com")
-}
-
 // https://github.com/yt-dlp/yt-dlp/issues/9506#issuecomment-2053987537
 export const tiktokArgs = [
 	"--extractor-args",

@@ -1,8 +1,9 @@
 import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
-import { deleteMessage, errorMessage, getThumbnail } from "./botutil"
-import { deniedMessage, tiktokArgs, tiktokMatcher } from "./constants"
+import { deleteMessage, errorMessage } from "./botutil"
+import { deniedMessage, tiktokArgs } from "./constants"
 import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
+import { getThumbnail, urlMatcher } from "./mediautil"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { removeHashtagsMentions } from "./textutil"
@@ -51,7 +52,8 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 
 	queue.add(async () => {
 		try {
-			const isTiktok = tiktokMatcher(url.text)
+			const isTiktok = urlMatcher(url.text, "tiktok.com")
+			const isYouTubeMusic = urlMatcher(url.text, "music.youtube.com")
 			const additionalArgs = isTiktok ? tiktokArgs : []
 
 			const info = await getInfo(url.text, [
@@ -66,7 +68,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 
 			const title = removeHashtagsMentions(info.title)
 
-			if (download.vcodec !== "none") {
+			if (download.vcodec !== "none" && !isYouTubeMusic) {
 				let video: InputFile | string
 
 				if (isTiktok) {
