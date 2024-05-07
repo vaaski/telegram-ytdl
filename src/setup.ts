@@ -1,8 +1,9 @@
 import type { ParseModeFlavor } from "@grammyjs/parse-mode"
+import type { Context } from "grammy"
 
 import { hydrateReply } from "@grammyjs/parse-mode"
 import express from "express"
-import { Bot, Context, webhookCallback } from "grammy"
+import { Bot, webhookCallback } from "grammy"
 import { API_ROOT, BOT_TOKEN, WEBHOOK_PORT, WEBHOOK_URL } from "./environment"
 
 export const bot = new Bot<ParseModeFlavor<Context>>(BOT_TOKEN, {

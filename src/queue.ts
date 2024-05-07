@@ -4,8 +4,6 @@ export class Queue {
   private queue: GenericFunction[] = []
   private running = false
 
-  constructor() {}
-
   private run = async (executor: GenericFunction) => {
     try {
       await executor()

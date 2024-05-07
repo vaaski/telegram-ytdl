@@ -2,7 +2,8 @@ const getVariable = (key: string) => {
   const value = process.env[key]
 
   if (value) return value
-  else throw new Error(`Environment variable ${key} is not set`)
+
+  throw new Error(`Environment variable ${key} is not set`)
 }
 
 export const WEBHOOK_PORT = getVariable("TELEGRAM_WEBHOOK_PORT")
