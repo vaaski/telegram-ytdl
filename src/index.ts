@@ -64,18 +64,20 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 			const [download] = info.requested_downloads ?? []
 			if (!download || !download.url) throw new Error("No download available")
 
+			const title = removeHashtagsMentions(info.title)
+
 			if (download.vcodec !== "none") {
 				let video: InputFile | string
 
 				if (isTiktok) {
 					const stream = streamFromInfo(info)
-					video = new InputFile(stream.stdout)
+					video = new InputFile(stream.stdout, title)
 				} else {
-					video = new InputFile({ url: download.url })
+					video = new InputFile({ url: download.url }, title)
 				}
 
 				await ctx.replyWithVideo(video, {
-					caption: removeHashtagsMentions(info.title),
+					caption: title,
 					supports_streaming: true,
 					reply_parameters: {
 						message_id: ctx.message?.message_id,
@@ -87,7 +89,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 				const audio = new InputFile(stream.stdout)
 
 				await ctx.replyWithAudio(audio, {
-					caption: removeHashtagsMentions(info.title),
+					caption: title,
 					performer: info.uploader,
 					title: info.title,
 					thumbnail: getThumbnail(info.thumbnails),
