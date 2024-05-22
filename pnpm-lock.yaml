@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@grammyjs/parse-mode':
     specifier: ^1.10.0
-    version: 1.10.0(grammy@1.22.4)
+    version: 1.10.0(grammy@1.23.0)
   '@resync-tv/yt-dlp':
     specifier: 0.3.1
     version: 0.3.1(typescript@5.4.5)
@@ -15,8 +15,8 @@ dependencies:
     specifier: ^4.19.2
     version: 4.19.2
   grammy:
-    specifier: ^1.22.4
-    version: 1.22.4
+    specifier: ^1.23.0
+    version: 1.23.0
 
 devDependencies:
   '@biomejs/biome':
@@ -332,17 +332,17 @@ packages:
     dev: true
     optional: true
 
-  /@grammyjs/parse-mode@1.10.0(grammy@1.22.4):
+  /@grammyjs/parse-mode@1.10.0(grammy@1.23.0):
     resolution: {integrity: sha512-ZjbY2Ax0b4Nf8lPz3NV0cWDxUC10kOkzgxws+iTdgG+hAiPQVUnP/oJnAKrW1ZQOWULZYQ4GOR/+aCZHyUuLQA==}
     engines: {node: '>=14.13.1'}
     peerDependencies:
       grammy: ^1.20.1
     dependencies:
-      grammy: 1.22.4
+      grammy: 1.23.0
     dev: false
 
-  /@grammyjs/types@3.6.2:
-    resolution: {integrity: sha512-7OswNRPN72qFUWhysNrY96+5LKBQXgxqw0iNbleYV7G8GB6ZPVdkwFMIZn1Fda2iRKMYT6S6Sxuel0465VGtHQ==}
+  /@grammyjs/types@3.7.0:
+    resolution: {integrity: sha512-/q8XVwSB7LrN1w1RSaUffO6gYyi5PHOBq1cbLHqDYiy994BxDKVD5N18viWac8Z014UGG2X+s9Fgs7cxsr0q8g==}
     dev: false
 
   /@resync-tv/yt-dlp@0.3.1(typescript@5.4.5):
@@ -713,11 +713,11 @@ packages:
       get-intrinsic: 1.2.4
     dev: false
 
-  /grammy@1.22.4:
-    resolution: {integrity: sha512-7EIdixo4kV/lJWyKswyi5n3AJ2U/2731rPf8a3SKoXQ0tiHdCTvdgc2atdN2b10g8o6wJ2SXTf0xQX3Dqm1buA==}
+  /grammy@1.23.0:
+    resolution: {integrity: sha512-yCogmYpbSgtSBDb8rpsFmIWGWqAqtnkrkfJCiB7BSU0hIMYiVz5KsYMlte2UFc7l0izm4zbP8d9j6QpREy0JGw==}
     engines: {node: ^12.20.0 || >=14.13.1}
     dependencies:
-      '@grammyjs/types': 3.6.2
+      '@grammyjs/types': 3.7.0
       abort-controller: 3.0.0
       debug: 4.3.4
       node-fetch: 2.7.0
