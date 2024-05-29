@@ -26,12 +26,12 @@ To host your own instance of this bot, you need to have a Telegram bot token, Te
 and a server to run the bot on. You can create a Telegram bot with [BotFather][botfather] and purchase
 a cheap VPS with the hoster of your choice.
 
-I recommend [Hetzner][hetzner] and you can get 20€ in credits for free using my [referral link](hetzner).
+I recommend [Hetzner][hetzner] and you can get 20€ in credits for free using my [referral link][hetzner].
 
 ### Installation
 
 - [Install Docker](https://docs.docker.com/engine/install)
-- Create a folder and put the [docker-compose.yml](./docker-compose.yml) into it.
+- Create a folder and put the [compose.yml](./compose.yml) into it.
 - Fill out and adjust the following variables in the docker-compose.yml file:
 
   | Variable                | Description                                                                                                    |
