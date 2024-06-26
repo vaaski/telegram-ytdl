@@ -14,6 +14,7 @@ lerna-debug.log*
 *.json
 !pm2.json
 !biome.json
+!.vscode/*.json
 
 # Caches
 
