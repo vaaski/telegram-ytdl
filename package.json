@@ -7,7 +7,7 @@
 		"dev": "tsx watch -r dotenv/config src/index.ts",
 		"build": "docker build -t telegram-ytdl .",
 		"format": "biome format --write . ",
-		"lint": "biome lint --apply .",
+		"lint": "biome lint --write .",
 		"check": "pnpm format && pnpm lint",
 		"typecheck": "tsc --noEmit"
 	},
