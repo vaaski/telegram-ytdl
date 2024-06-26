@@ -7,8 +7,10 @@ import { getThumbnail, urlMatcher } from "./mediautil"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { removeHashtagsMentions } from "./textutil"
+import { Updater } from "./updater"
 
 const queue = new Queue()
+const updater = new Updater()
 
 bot.use(async (ctx, next) => {
 	if (ctx.chat?.type !== "private") return
@@ -18,7 +20,7 @@ bot.use(async (ctx, next) => {
 
 //? filter out messages from non-whitelisted users
 bot.on("message:text", async (ctx, next) => {
-	if (WHITELISTED_IDS.includes(ctx.from?.id)) return next()
+	if (WHITELISTED_IDS.includes(ctx.from?.id)) return await next()
 
 	await ctx.replyWithHTML(deniedMessage, {
 		link_preview_options: { is_disabled: true },
@@ -32,9 +34,21 @@ bot.on("message:text", async (ctx, next) => {
 	])
 })
 
+bot.on("message:text", async (ctx, next) => {
+	if (updater.updating === null) return await next()
+
+	const maintenanceNotice = await ctx.replyWithHTML(
+		"Bot is currently under maintenance, it'll return shortly.",
+	)
+	await updater.updating
+
+	await deleteMessage(maintenanceNotice)
+	await next()
+})
+
 bot.on("message:text").on("::url", async (ctx, next) => {
 	const [url] = ctx.entities("url")
-	if (!url) return next()
+	if (!url) return await next()
 
 	const processingMessage = await ctx.replyWithHTML("Processing...", {
 		disable_notification: true,

@@ -44,6 +44,7 @@ I recommend [Hetzner][hetzner] and you can get 20€ in credits for free using m
   | `TELEGRAM_API_ROOT`     | The URL of your Telegram bot API server (can probably be left unchanged)                                       |
   | `TELEGRAM_WEBHOOK_PORT` | The port the bot will listen on (can probably be left unchanged)                                               |
   | `TELEGRAM_WEBHOOK_URL`  | The URL of your Telegram bot API server (can probably be left unchanged)                                       |
+  | `YTDL_AUTOUPDATE`       | Whether to automatically update yt-dlp (defaults to `"true"`, set to `"false"` to disable)                     |
 
 - Run `docker compose up -d` in the folder you created.
 

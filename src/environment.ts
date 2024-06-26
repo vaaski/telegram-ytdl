@@ -1,11 +1,14 @@
-const getVariable = (key: string) => {
+const getVariable = (key: string, defaultValue?: string) => {
 	const value = process.env[key]
 
 	if (value) return value
+	if (defaultValue) return defaultValue
 
 	throw new Error(`Environment variable ${key} is not set`)
 }
 
+export const YTDL_AUTOUPDATE =
+	getVariable("YTDL_AUTOUPDATE", "true") !== "false"
 export const WEBHOOK_PORT = getVariable("TELEGRAM_WEBHOOK_PORT")
 export const WEBHOOK_URL = getVariable("TELEGRAM_WEBHOOK_URL")
 export const API_ROOT = getVariable("TELEGRAM_API_ROOT")
