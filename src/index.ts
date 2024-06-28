@@ -35,7 +35,7 @@ bot.on("message:text", async (ctx, next) => {
 })
 
 bot.on("message:text", async (ctx, next) => {
-	if (updater.updating === null) return await next()
+	if (updater.updating === false) return await next()
 
 	const maintenanceNotice = await ctx.replyWithHTML(
 		"Bot is currently under maintenance, it'll return shortly.",

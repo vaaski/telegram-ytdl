@@ -30,8 +30,8 @@ export class Updater {
 		try {
 			const result = await updateYTDLP()
 
-			console.log("yt-dlp updated")
 			console.log(result.stdout)
+			console.log("yt-dlp updated")
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error("yt-dlp update failed")
