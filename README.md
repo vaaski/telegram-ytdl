@@ -18,6 +18,10 @@ The bot then simply passes the URL to [yt-dlp][yt-dlp] with the `-f b` flag, whi
 format that contains both video and audio. This is meant to work together with a self-hosted
 Telegram bot API server, so that the upload limit for bots is increased from 50MB to 2GB.
 
+Because content sites change often (especially TikTok!), the bot uses the nightly build of yt-dlp to
+always get the latest resolvers. It will also auto-update yt-dlp every night as long as you don't
+set `YTDL_AUTOUPDATE` to `"false"`.
+
 The instance hosted by me is no longer available for public use, but you can simply host your own instance.
 
 ## Hosting
