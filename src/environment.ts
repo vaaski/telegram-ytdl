@@ -2,7 +2,7 @@ const getVariable = (key: string, defaultValue?: string) => {
 	const value = process.env[key]
 
 	if (value) return value
-	if (defaultValue) return defaultValue
+	if (defaultValue !== undefined) return defaultValue
 
 	throw new Error(`Environment variable ${key} is not set`)
 }
@@ -17,3 +17,4 @@ export const ADMIN_ID = Number.parseInt(getVariable("ADMIN_ID"))
 export const WHITELISTED_IDS = getVariable("WHITELISTED_IDS")
 	.split(",")
 	.map((id) => Number.parseInt(id))
+export const OPENAI_API_KEY = getVariable("OPENAI_API_KEY", "")

@@ -1,12 +1,13 @@
 import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./botutil"
-import { deniedMessage, tiktokArgs } from "./constants"
+import { t, tiktokArgs } from "./constants"
 import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
 import { getThumbnail, urlMatcher } from "./mediautil"
 import { Queue } from "./queue"
 import { bot } from "./setup"
 import { removeHashtagsMentions } from "./textutil"
+import { translateText } from "./translate"
 import { Updater } from "./updater"
 
 const queue = new Queue()
@@ -22,24 +23,43 @@ bot.use(async (ctx, next) => {
 bot.on("message:text", async (ctx, next) => {
 	if (WHITELISTED_IDS.includes(ctx.from?.id)) return await next()
 
-	await ctx.replyWithHTML(deniedMessage, {
+	const deniedResponse = await ctx.replyWithHTML(t.deniedMessage, {
 		link_preview_options: { is_disabled: true },
 	})
 
-	const forwarded = await ctx.forwardMessage(ADMIN_ID, {
-		disable_notification: true,
-	})
-	await bot.api.setMessageReaction(forwarded.chat.id, forwarded.message_id, [
-		{ type: "emoji", emoji: "🖕" },
+	await Promise.all([
+		(async () => {
+			if (ctx.from.language_code && ctx.from.language_code !== "en") {
+				const translated = await translateText(
+					t.deniedMessage,
+					ctx.from.language_code,
+				)
+				if (translated === t.deniedMessage) return
+				await bot.api.editMessageText(
+					ctx.chat.id,
+					deniedResponse.message_id,
+					translated,
+					{ parse_mode: "HTML", link_preview_options: { is_disabled: true } },
+				)
+			}
+		})(),
+		(async () => {
+			const forwarded = await ctx.forwardMessage(ADMIN_ID, {
+				disable_notification: true,
+			})
+			await bot.api.setMessageReaction(
+				forwarded.chat.id,
+				forwarded.message_id,
+				[{ type: "emoji", emoji: "🖕" }],
+			)
+		})(),
 	])
 })
 
 bot.on("message:text", async (ctx, next) => {
 	if (updater.updating === false) return await next()
 
-	const maintenanceNotice = await ctx.replyWithHTML(
-		"Bot is currently under maintenance, it'll return shortly.",
-	)
+	const maintenanceNotice = await ctx.replyWithHTML(t.maintenanceNotice)
 	await updater.updating
 
 	await deleteMessage(maintenanceNotice)
@@ -50,7 +70,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 	const [url] = ctx.entities("url")
 	if (!url) return await next()
 
-	const processingMessage = await ctx.replyWithHTML("Processing...", {
+	const processingMessage = await ctx.replyWithHTML(t.processing, {
 		disable_notification: true,
 	})
 
@@ -132,5 +152,19 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 })
 
 bot.on("message:text", async (ctx) => {
-	await ctx.replyWithHTML("You need to send an URL to download stuff.")
+	const response = await ctx.replyWithHTML(t.urlReminder)
+
+	if (ctx.from.language_code && ctx.from.language_code !== "en") {
+		const translated = await translateText(
+			t.urlReminder,
+			ctx.from.language_code,
+		)
+		if (translated === t.urlReminder) return
+		await bot.api.editMessageText(
+			ctx.chat.id,
+			response.message_id,
+			translated,
+			{ parse_mode: "HTML", link_preview_options: { is_disabled: true } },
+		)
+	}
 })

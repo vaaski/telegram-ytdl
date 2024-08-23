@@ -23,6 +23,9 @@ services:
       # defaults to "true", set to "false" to disable
       YTDL_AUTOUPDATE: "true"
 
+      # provide your OpenAI API key to enable auto-translation (optional)
+      OPENAI_API_KEY: ""
+
   telegram-bot-api:
     image: ghcr.io/bots-house/docker-telegram-bot-api:latest
     network_mode: host
