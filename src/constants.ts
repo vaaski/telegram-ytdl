@@ -1,4 +1,4 @@
-import { bold, link } from "./botutil"
+import { bold, link } from "./bot-util"
 
 export const t = {
 	urlReminder: "You need to send an URL to download stuff.",
