@@ -1,8 +1,0 @@
-{
-	"apps": [
-		{
-			"name": "telegram-ytdl-2024",
-			"script": "npx tsx -r dotenv/config src/index.ts"
-		}
-	]
-}
