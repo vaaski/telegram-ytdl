@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 ARG TELEGRAM_BOT_TOKEN
 ARG TELEGRAM_API_ROOT

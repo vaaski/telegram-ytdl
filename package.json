@@ -13,16 +13,16 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.1",
-		"@types/express": "^4.17.21",
-		"@types/node": "20",
+		"@types/express": "^5.0.0",
+		"@types/node": "22",
 		"dotenv": "^16.4.5",
 		"tsx": "^4.15.7",
 		"typescript": "^5.5.2"
 	},
 	"dependencies": {
 		"@grammyjs/parse-mode": "^1.10.0",
-		"@resync-tv/yt-dlp": "0.4.1",
-		"croner": "^8.0.2",
+		"@resync-tv/yt-dlp": "0.5.0",
+		"croner": "^9.0.0",
 		"express": "^4.19.2",
 		"grammy": "^1.24.1",
 		"openai": "^4.56.0"
