@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 type Translations = Record<string, Record<string, string>>
 
-const SAVED_TRANSLATION_FILE = resolve(__dirname, "../saved-translations.json")
+const SAVED_TRANSLATION_FILE = resolve(__dirname, "../storage/saved-translations.json")
 if (!existsSync(SAVED_TRANSLATION_FILE)) {
 	console.log("Creating saved translations file")
 	await writeFile(SAVED_TRANSLATION_FILE, "{}")
