@@ -1,4 +1,4 @@
-import { getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
+import { downloadFromInfo, getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./bot-util"
 import { t, tiktokArgs } from "./constants"
@@ -108,7 +108,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 				let video: InputFile | string
 
 				if (isTiktok) {
-					const stream = streamFromInfo(info)
+					const stream = downloadFromInfo(info, "-")
 					video = new InputFile(stream.stdout, title)
 				} else {
 					video = new InputFile({ url: download.url }, title)
@@ -124,7 +124,11 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 					},
 				})
 			} else if (download.acodec !== "none") {
-				const stream = streamFromInfo(info, ["-x", "--audio-format", "mp3"])
+				const stream = downloadFromInfo(info, "-", [
+					"-x",
+					"--audio-format",
+					"mp3",
+				])
 				const audio = new InputFile(stream.stdout)
 
 				await ctx.replyWithAudio(audio, {
