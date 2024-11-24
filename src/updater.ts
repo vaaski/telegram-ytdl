@@ -1,5 +1,5 @@
 import { updateYTDLP } from "@resync-tv/yt-dlp"
-import Cron from "croner"
+import { Cron } from "croner"
 import { YTDL_AUTOUPDATE } from "./environment"
 
 export class Updater {
@@ -12,7 +12,7 @@ export class Updater {
 		console.log("Auto-update is", this.enabled ? "enabled" : "disabled")
 		if (!this.enabled) return
 
-		this.#job = Cron("20 4 * * *", this.update)
+		this.#job = new Cron("20 4 * * *", this.update)
 
 		console.log("Next update scheduled at", this.#job.nextRun())
 	}

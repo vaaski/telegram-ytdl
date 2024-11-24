@@ -15,8 +15,8 @@ importers:
         specifier: 0.5.1
         version: 0.5.1(typescript@5.6.3)
       croner:
-        specifier: ^8.1.2
-        version: 8.1.2
+        specifier: ^9.0.0
+        version: 9.0.0
       express:
         specifier: ^4.21.1
         version: 4.21.1
@@ -350,8 +350,8 @@ packages:
     resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
     engines: {node: '>= 0.6'}
 
-  croner@8.1.2:
-    resolution: {integrity: sha512-ypfPFcAXHuAZRCzo3vJL6ltENzniTjwe/qsLleH1V2/7SRDjgvRQyrLmumFTLmjFax4IuSxfGXEn79fozXcJog==}
+  croner@9.0.0:
+    resolution: {integrity: sha512-onMB0OkDjkXunhdW9htFjEhqrD54+M94i6ackoUkjHKbRnXdyEyKRelp4nJ1kAz32+s27jP1FsebpJCVl0BsvA==}
     engines: {node: '>=18.0'}
 
   debug@2.6.9:
@@ -912,7 +912,7 @@ snapshots:
 
   cookie@0.7.1: {}
 
-  croner@8.1.2: {}
+  croner@9.0.0: {}
 
   debug@2.6.9:
     dependencies:
