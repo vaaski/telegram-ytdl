@@ -2,7 +2,7 @@ import OpenAI from "openai"
 import { OPENAI_API_KEY } from "./environment"
 
 import { existsSync } from "node:fs"
-import { readFile, writeFile } from "node:fs/promises"
+import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -10,7 +10,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 type Translations = Record<string, Record<string, string>>
 
-const SAVED_TRANSLATION_FILE = resolve(__dirname, "../storage/saved-translations.json")
+const SAVED_TRANSLATION_FILE = resolve(
+	__dirname,
+	"../storage/saved-translations.json",
+)
+await mkdir(dirname(SAVED_TRANSLATION_FILE), { recursive: true })
 if (!existsSync(SAVED_TRANSLATION_FILE)) {
 	console.log("Creating saved translations file")
 	await writeFile(SAVED_TRANSLATION_FILE, "{}")
