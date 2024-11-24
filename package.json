@@ -21,7 +21,7 @@
 	},
 	"dependencies": {
 		"@grammyjs/parse-mode": "^1.10.0",
-		"@resync-tv/yt-dlp": "0.5.0",
+		"@resync-tv/yt-dlp": "0.5.1",
 		"croner": "^8.1.2",
 		"express": "^4.21.1",
 		"grammy": "^1.31.0",
