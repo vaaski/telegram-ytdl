@@ -10,9 +10,8 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-# testing things
-/*.json
-!biome.json
+saved-translations.json
+storage/
 
 # Caches
 
