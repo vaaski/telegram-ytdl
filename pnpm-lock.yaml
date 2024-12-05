@@ -10,10 +10,10 @@ importers:
     dependencies:
       '@grammyjs/parse-mode':
         specifier: ^1.10.0
-        version: 1.10.0(grammy@1.31.0)
+        version: 1.10.0(grammy@1.32.0)
       '@resync-tv/yt-dlp':
         specifier: 0.5.1
-        version: 0.5.1(typescript@5.6.3)
+        version: 0.5.1(typescript@5.7.2)
       croner:
         specifier: ^9.0.0
         version: 9.0.0
@@ -21,8 +21,8 @@ importers:
         specifier: ^4.21.1
         version: 4.21.1
       grammy:
-        specifier: ^1.31.0
-        version: 1.31.0
+        specifier: ^1.32.0
+        version: 1.32.0
       openai:
         specifier: ^4.72.0
         version: 4.72.0
@@ -35,7 +35,7 @@ importers:
         version: 5.0.0
       '@types/node':
         specifier: '20'
-        version: 20.17.8
+        version: 20.17.9
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -43,8 +43,8 @@ importers:
         specifier: ^4.19.2
         version: 4.19.2
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^5.7.2
+        version: 5.7.2
 
 packages:
 
@@ -251,8 +251,8 @@ packages:
     peerDependencies:
       grammy: ^1.20.1
 
-  '@grammyjs/types@3.15.0':
-    resolution: {integrity: sha512-XQHJNlF6AuJgVPYL8mEWrYk4Pg/FoP9PryTVSObtf/SWRIk0dCBkIwSaGGoXa1VDrLVWl/dIP79FgS2acJJjdg==}
+  '@grammyjs/types@3.16.0':
+    resolution: {integrity: sha512-hElpAJL7/p8PnHvOM0K8+iU0lrVqFgVHzsAknNomZXWT9sFyj5tmEmsAM0JCYBTNvWx5/g5jWU87+PlgUDZ/YA==}
 
   '@resync-tv/yt-dlp@0.5.1':
     resolution: {integrity: sha512-/BTY0W5I7aGwmDurJniwS9YAPWk5P8WTEgPxFhiTo+wTs61fzZhuAuwp+lmlEwSIz87q/YC52bBvd9z74DHFZQ==}
@@ -286,8 +286,8 @@ packages:
   '@types/node@18.19.45':
     resolution: {integrity: sha512-VZxPKNNhjKmaC1SUYowuXSRSMGyQGmQjvvA1xE4QZ0xce2kLtEhPDS+kqpCPBZYgqblCLQ2DAjSzmgCM5auvhA==}
 
-  '@types/node@20.17.8':
-    resolution: {integrity: sha512-ahz2g6/oqbKalW9sPv6L2iRbhLnojxjYWspAqhjvqSWBgGebEJT5GvRmk0QXPj3sbC6rU0GTQjPLQkmR8CObvA==}
+  '@types/node@20.17.9':
+    resolution: {integrity: sha512-0JOXkRyLanfGPE2QRCwgxhzlBAvaRdCNMcvbd7jFfpmD4eEXll7LRwy5ymJmyeZqk7Nh7eD2LeUyQ68BbndmXw==}
 
   '@types/qs@6.9.11':
     resolution: {integrity: sha512-oGk0gmhnEJK4Yyk+oI7EfXsLayXatCWPHary1MtcmbAifkobT9cM9yutG/hZKIseOU0MqbIwQ/u2nn/Gb+ltuQ==}
@@ -471,8 +471,8 @@ packages:
   gopd@1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
 
-  grammy@1.31.0:
-    resolution: {integrity: sha512-JcuogF2NzLl2x/L/cRMkjr2+/dfiFy+9fiKrnt2TQyNMWEXGpsWnG86ey1et3eLmaL8QY30n6RyxmDlH8SVSIg==}
+  grammy@1.32.0:
+    resolution: {integrity: sha512-FUH7q0BhMyqsx8abo45iwKBnHX6Q9A4o1uUTVA3sjzyQtLzzYLeDgzCgUqjaKUh2xF/+LZBw2lgJkRWlB2RKeg==}
     engines: {node: ^12.20.0 || >=14.13.1}
 
   has-property-descriptors@1.0.2:
@@ -645,8 +645,8 @@ packages:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
 
-  typescript@5.6.3:
-    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+  typescript@5.7.2:
+    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -787,28 +787,28 @@ snapshots:
   '@esbuild/win32-x64@0.23.1':
     optional: true
 
-  '@grammyjs/parse-mode@1.10.0(grammy@1.31.0)':
+  '@grammyjs/parse-mode@1.10.0(grammy@1.32.0)':
     dependencies:
-      grammy: 1.31.0
+      grammy: 1.32.0
 
-  '@grammyjs/types@3.15.0': {}
+  '@grammyjs/types@3.16.0': {}
 
-  '@resync-tv/yt-dlp@0.5.1(typescript@5.6.3)':
+  '@resync-tv/yt-dlp@0.5.1(typescript@5.7.2)':
     dependencies:
-      typescript: 5.6.3
+      typescript: 5.7.2
 
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.17.8
+      '@types/node': 20.17.9
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 20.17.8
+      '@types/node': 20.17.9
 
   '@types/express-serve-static-core@5.0.1':
     dependencies:
-      '@types/node': 20.17.8
+      '@types/node': 20.17.9
       '@types/qs': 6.9.11
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -828,14 +828,14 @@ snapshots:
 
   '@types/node-fetch@2.6.11':
     dependencies:
-      '@types/node': 20.17.8
+      '@types/node': 20.17.9
       form-data: 4.0.0
 
   '@types/node@18.19.45':
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@20.17.8':
+  '@types/node@20.17.9':
     dependencies:
       undici-types: 6.19.8
 
@@ -846,13 +846,13 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 20.17.8
+      '@types/node': 20.17.9
 
   '@types/serve-static@1.15.5':
     dependencies:
       '@types/http-errors': 2.0.4
       '@types/mime': 3.0.4
-      '@types/node': 20.17.8
+      '@types/node': 20.17.9
 
   abort-controller@3.0.0:
     dependencies:
@@ -1067,9 +1067,9 @@ snapshots:
     dependencies:
       get-intrinsic: 1.2.4
 
-  grammy@1.31.0:
+  grammy@1.32.0:
     dependencies:
-      '@grammyjs/types': 3.15.0
+      '@grammyjs/types': 3.16.0
       abort-controller: 3.0.0
       debug: 4.3.6
       node-fetch: 2.7.0
@@ -1246,7 +1246,7 @@ snapshots:
       media-typer: 0.3.0
       mime-types: 2.1.35
 
-  typescript@5.6.3: {}
+  typescript@5.7.2: {}
 
   undici-types@5.26.5: {}
 
