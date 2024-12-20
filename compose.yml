@@ -6,7 +6,7 @@ services:
     network_mode: host
     restart: unless-stopped
     volumes:
-      - vaaski-telegram-ytdl:/app/storage
+      - ./vaaski-telegram-ytdl:/app/storage
     environment:
       # get your bot token from @BotFather
       TELEGRAM_BOT_TOKEN: ""
