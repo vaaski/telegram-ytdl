@@ -11,20 +11,18 @@ export const errorMessage = (chat: Chat, error?: string) => {
 	let message = bold("An error occurred.")
 	if (error) message += `\n\n${code(error)}`
 
-	const tasks = [
-		() => bot.api.sendMessage(chat.id, message, { parse_mode: "HTML" }),
-	]
+	const tasks = [bot.api.sendMessage(chat.id, message, { parse_mode: "HTML" })]
 
-	if (chat.id === ADMIN_ID) {
+	if (chat.id !== ADMIN_ID) {
 		let adminMessage = `Error in chat ${mention("user", chat.id)}`
 		if (error) adminMessage += `\n\n${code(error)}`
 
-		tasks.push(() =>
+		tasks.push(
 			bot.api.sendMessage(ADMIN_ID, adminMessage, { parse_mode: "HTML" }),
 		)
 	}
 
-	return Promise.all(tasks.map((task) => task()))
+	return Promise.all(tasks)
 }
 
 // prettier-ignore
