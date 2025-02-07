@@ -2,7 +2,7 @@ import { downloadFromInfo, getInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./bot-util"
 import { cobaltMatcher, cobaltResolver } from "./cobalt"
-import { t, tiktokArgs } from "./constants"
+import { link, t, tiktokArgs } from "./constants"
 import { ADMIN_ID, cookieArgs, WHITELISTED_IDS } from "./environment"
 import { getThumbnail, urlMatcher } from "./media-util"
 import { Queue } from "./queue"
@@ -88,6 +88,41 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 			})
 	}
 
+	const useCobaltResolver = async () => {
+		try {
+			const resolved = await cobaltResolver(url.text)
+
+			if (resolved.status === "error") {
+				throw resolved.error
+			}
+
+			if (resolved.status === "picker") {
+				const photos = chunkArray(
+					10,
+					resolved.picker
+						.filter((p) => p.type === "photo")
+						.map((p) => ({
+							type: "photo" as const,
+							media: p.url,
+						})),
+				)
+
+				for (const chunk of photos) {
+					await bot.api.sendMediaGroup(ctx.chat.id, chunk)
+				}
+
+				return true
+			}
+
+			if (resolved.status === "redirect") {
+				await ctx.replyWithHTML(link("Resolved content URL", resolved.url))
+				return true
+			}
+		} catch (error) {
+			console.error("Error resolving with cobalt", error)
+		}
+	}
+
 	queue.add(async () => {
 		try {
 			const isTiktok = urlMatcher(url.text, "tiktok.com")
@@ -96,25 +131,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 			const additionalArgs = isTiktok ? tiktokArgs : []
 
 			if (useCobalt) {
-				const resolved = await cobaltResolver(url.text)
-
-				if (resolved.status === "picker") {
-					const photos = chunkArray(
-						10,
-						resolved.picker
-							.filter((p) => p.type === "photo")
-							.map((p) => ({
-								type: "photo" as const,
-								media: p.url,
-							})),
-					)
-
-					for (const chunk of photos) {
-						await bot.api.sendMediaGroup(ctx.chat.id, chunk)
-					}
-
-					return
-				}
+				if (await useCobaltResolver()) return
 			}
 
 			// -----------------------------------------------------------------------------
@@ -171,9 +188,11 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 					},
 				})
 			} else {
+				if (await useCobaltResolver()) return
 				throw new Error("No download available")
 			}
 		} catch (error) {
+			if (await useCobaltResolver()) return
 			return error instanceof Error
 				? errorMessage(ctx.chat, error.message)
 				: errorMessage(ctx.chat, `Couldn't download ${url}`)

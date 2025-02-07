@@ -23,6 +23,9 @@ if (cobaltInstanceInfo) {
 const cobaltRegexes = [
 	// tiktok photo slides
 	/^(?:https:\/\/)?(?:www\.)?tiktok\.com\/@\w+\/photo\/\d+$/,
+
+	// instagram posts
+	// /^(?:https:\/\/)?(?:www\.)?instagram\.com\/p\/.+$/,
 ]
 
 export const cobaltMatcher = (url: string) => {
@@ -66,8 +69,11 @@ export type CobaltResolved =
 				}
 			}
 	  }
-	| { status: "redirect" }
-	| { status: "tunnel" }
+	| {
+			status: "redirect" | "tunnel"
+			url: string
+			filename: string
+	  }
 
 export type CobaltInfo = {
 	cobalt: {
