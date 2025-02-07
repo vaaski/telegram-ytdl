@@ -1,3 +1,5 @@
+import { t } from "./constants"
+
 export const removeHashtagsMentions = (text?: string) => {
 	if (!text) return
 
@@ -12,4 +14,14 @@ export const chunkArray = <T>(chunkSize: number, array: T[]) => {
 	}
 
 	return result
+}
+
+export const cutoffWithNotice = (text: string) => {
+	const noticeLength = t.cutoffNotice.length
+
+	if (text.length > 4000 - noticeLength) {
+		return text.slice(0, 4000 - noticeLength) + t.cutoffNotice
+	}
+
+	return text
 }
