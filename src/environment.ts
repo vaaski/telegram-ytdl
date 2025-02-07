@@ -25,6 +25,7 @@ export const WHITELISTED_IDS = getVariable("WHITELISTED_IDS", "")
 	.map((id) => Number.parseInt(id))
 	.filter((id) => !Number.isNaN(id))
 export const OPENAI_API_KEY = getVariable("OPENAI_API_KEY", "")
+export const COBALT_INSTANCE_URL = getVariable("COBALT_INSTANCE_URL", "")
 
 export const COOKIE_FILE = resolve(__dirname, "../storage/cookies.txt")
 export const cookieArgs = async () => {

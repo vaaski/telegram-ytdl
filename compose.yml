@@ -28,6 +28,9 @@ services:
       # provide your OpenAI API key to enable auto-translation (optional)
       OPENAI_API_KEY: ""
 
+      # provide your cobalt instance url (optional, can be left as-is for the default compose.yml)
+      COBALT_INSTANCE_URL: "http://127.0.0.1:8416"
+
   telegram-bot-api:
     image: ghcr.io/bots-house/docker-telegram-bot-api:latest
     network_mode: host
@@ -44,6 +47,14 @@ services:
       - server-data:/var/lib/telegram-bot-api
     ports:
       - 8081:8081
+
+  cobalt:
+    image: ghcr.io/imputnet/cobalt:10
+    restart: unless-stopped
+    ports:
+      - 8416:9000/tcp
+    environment:
+      - API_URL=http://127.0.0.1:8416
 
 volumes:
   server-data:

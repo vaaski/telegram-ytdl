@@ -1,14 +1,15 @@
-import { downloadFromInfo, getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
+import { downloadFromInfo, getInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./bot-util"
+import { cobaltMatcher, cobaltResolver } from "./cobalt"
 import { t, tiktokArgs } from "./constants"
 import { ADMIN_ID, cookieArgs, WHITELISTED_IDS } from "./environment"
 import { getThumbnail, urlMatcher } from "./media-util"
 import { Queue } from "./queue"
 import { bot } from "./setup"
-import { removeHashtagsMentions } from "./textutil"
 import { translateText } from "./translate"
 import { Updater } from "./updater"
+import { chunkArray, removeHashtagsMentions } from "./util"
 
 const queue = new Queue()
 const updater = new Updater()
@@ -91,7 +92,32 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 		try {
 			const isTiktok = urlMatcher(url.text, "tiktok.com")
 			const isYouTubeMusic = urlMatcher(url.text, "music.youtube.com")
+			const useCobalt = cobaltMatcher(url.text)
 			const additionalArgs = isTiktok ? tiktokArgs : []
+
+			if (useCobalt) {
+				const resolved = await cobaltResolver(url.text)
+
+				if (resolved.status === "picker") {
+					const photos = chunkArray(
+						10,
+						resolved.picker
+							.filter((p) => p.type === "photo")
+							.map((p) => ({
+								type: "photo" as const,
+								media: p.url,
+							})),
+					)
+
+					for (const chunk of photos) {
+						await bot.api.sendMediaGroup(ctx.chat.id, chunk)
+					}
+
+					return
+				}
+			}
+
+			// -----------------------------------------------------------------------------
 
 			const info = await getInfo(url.text, [
 				"-f",
