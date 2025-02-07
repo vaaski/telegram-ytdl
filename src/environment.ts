@@ -1,3 +1,9 @@
+import { stat } from "node:fs/promises"
+import { dirname, resolve } from "node:path"
+import { fileURLToPath } from "node:url"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 const getVariable = (key: string, defaultValue?: string) => {
 	const value = process.env[key]
 
@@ -19,3 +25,15 @@ export const WHITELISTED_IDS = getVariable("WHITELISTED_IDS", "")
 	.map((id) => Number.parseInt(id))
 	.filter((id) => !Number.isNaN(id))
 export const OPENAI_API_KEY = getVariable("OPENAI_API_KEY", "")
+
+export const COOKIE_FILE = resolve(__dirname, "../storage/cookies.txt")
+export const cookieArgs = async () => {
+	try {
+		const stats = await stat(COOKIE_FILE)
+		if (stats.isFile()) {
+			return ["--cookies", COOKIE_FILE]
+		}
+	} catch {}
+
+	return []
+}

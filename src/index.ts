@@ -2,7 +2,7 @@ import { downloadFromInfo, getInfo, streamFromInfo } from "@resync-tv/yt-dlp"
 import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./bot-util"
 import { t, tiktokArgs } from "./constants"
-import { ADMIN_ID, WHITELISTED_IDS } from "./environment"
+import { ADMIN_ID, cookieArgs, WHITELISTED_IDS } from "./environment"
 import { getThumbnail, urlMatcher } from "./media-util"
 import { Queue } from "./queue"
 import { bot } from "./setup"
@@ -97,6 +97,7 @@ bot.on("message:text").on("::url", async (ctx, next) => {
 				"-f",
 				"b",
 				"--no-playlist",
+				...(await cookieArgs()),
 				...additionalArgs,
 			])
 
