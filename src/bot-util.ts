@@ -10,6 +10,8 @@ export const deleteMessage = (message: Message) => {
 }
 
 export const errorMessage = (chat: Chat, error?: string) => {
+	if (chat.type !== "private") return
+
 	let message = bold("An error occurred.")
 	if (error) message += `\n\n${code(cutoffWithNotice(error))}`
 

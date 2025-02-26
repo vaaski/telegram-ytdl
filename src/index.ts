@@ -3,7 +3,12 @@ import { InputFile } from "grammy"
 import { deleteMessage, errorMessage } from "./bot-util"
 import { cobaltMatcher, cobaltResolver } from "./cobalt"
 import { link, t, tiktokArgs } from "./constants"
-import { ADMIN_ID, cookieArgs, WHITELISTED_IDS } from "./environment"
+import {
+	ADMIN_ID,
+	ALLOW_GROUPS,
+	cookieArgs,
+	WHITELISTED_IDS,
+} from "./environment"
 import { getThumbnail, urlMatcher } from "./media-util"
 import { Queue } from "./queue"
 import { bot } from "./setup"
@@ -15,9 +20,14 @@ const queue = new Queue()
 const updater = new Updater()
 
 bot.use(async (ctx, next) => {
-	if (ctx.chat?.type !== "private") return
+	if (ctx.chat?.type === "private") {
+		return await next()
+	}
 
-	await next()
+	const isGroup = ["supergroup", "group"].includes(ctx.chat?.type ?? "")
+	if (ALLOW_GROUPS && isGroup) {
+		return await next()
+	}
 })
 
 //? filter out messages from non-whitelisted users

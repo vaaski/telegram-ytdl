@@ -16,6 +16,9 @@ services:
       # admin user id
       ADMIN_ID: "123456789"
 
+      # whether to allow groups (optional, defaults to "false")
+      ALLOW_GROUPS: "false"
+
       TELEGRAM_API_ROOT: "http://telegram-bot-api:8081"
       TELEGRAM_WEBHOOK_PORT: "8443"
       TELEGRAM_WEBHOOK_URL: "http://telegram-bot:8443"

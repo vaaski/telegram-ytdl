@@ -43,6 +43,7 @@ I recommend [Hetzner][hetzner] and you can get 20€ in credits for free using m
   | `TELEGRAM_BOT_TOKEN`    | Your Telegram bot token (get it from [BotFather][botfather])                                                                                   |
   | `WHITELISTED_IDS`       | A comma-separated list of Telegram user IDs that are allowed to use the bot (get them from [this bot][id-bot]), leave empty to allow all users |
   | `ADMIN_ID`              | Your Telegram user ID (get it from [this bot][id-bot])                                                                                         |
+  | `ALLOW_GROUPS`          | Whether to allow groups (defaults to `"false"`, set to `"true"` to enable)                                                                     |
   | `TELEGRAM_API_ID`       | Your Telegram API ID (get it [here][telegram-api-id])                                                                                          |
   | `TELEGRAM_API_HASH`     | Your Telegram API hash (get it [here][telegram-api-id])                                                                                        |
   | `TELEGRAM_API_ROOT`     | The URL of your Telegram bot API server (can probably be left unchanged)                                                                       |

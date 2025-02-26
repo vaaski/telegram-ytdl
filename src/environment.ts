@@ -24,6 +24,7 @@ export const WHITELISTED_IDS = getVariable("WHITELISTED_IDS", "")
 	.split(",")
 	.map((id) => Number.parseInt(id))
 	.filter((id) => !Number.isNaN(id))
+export const ALLOW_GROUPS = getVariable("ALLOW_GROUPS", "false") !== "false"
 export const OPENAI_API_KEY = getVariable("OPENAI_API_KEY", "")
 export const COBALT_INSTANCE_URL = getVariable("COBALT_INSTANCE_URL", "")
 
