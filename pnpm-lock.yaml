@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@grammyjs/parse-mode':
-        specifier: ^1.11.1
-        version: 1.11.1(grammy@1.35.0)
+        specifier: ^2.1.2
+        version: 2.1.2(grammy@1.35.0)
       '@resync-tv/yt-dlp':
         specifier: 0.5.1
         version: 0.5.1(typescript@5.7.3)
@@ -251,8 +251,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@grammyjs/parse-mode@1.11.1':
-    resolution: {integrity: sha512-7yEKVtXjNZsG8EX/AOtgR/7Af5QxcmAcTB31Nju+QELvL2uSQMJKlix5rkx695gqocUodLwWtuwCDGDoXGD2xg==}
+  '@grammyjs/parse-mode@2.1.2':
+    resolution: {integrity: sha512-WyIUqoW4rKj4ktyX8lzbpDaF87w3troekdYjaeigwWItQsxEgBa1gVRc+gAH5369Pm7tOh1MTYD1+TF13WqmeA==}
     engines: {node: '>=14.13.1'}
     peerDependencies:
       grammy: ^1.20.1
@@ -554,6 +554,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -799,7 +800,7 @@ snapshots:
   '@esbuild/win32-x64@0.25.0':
     optional: true
 
-  '@grammyjs/parse-mode@1.11.1(grammy@1.35.0)':
+  '@grammyjs/parse-mode@2.1.2(grammy@1.35.0)':
     dependencies:
       grammy: 1.35.0
 
