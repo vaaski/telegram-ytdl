@@ -12,7 +12,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
+		"@biomejs/biome": "^2.3.10",
 		"@types/express": "^5.0.0",
 		"@types/node": "20",
 		"dotenv": "^16.4.7",
