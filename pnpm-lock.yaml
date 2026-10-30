@@ -37,8 +37,8 @@ importers:
         specifier: '20'
         version: 20.17.19
       dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
+        specifier: ^18.0.9
+        version: 18.0.9
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
@@ -393,9 +393,10 @@ packages:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
 
-  dotenv@16.4.7:
-    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
+  dotenv@18.0.9:
+    resolution: {integrity: sha512-3fVOW4cB02R066PUSwn8O4TJyz9NckQl7F81blIbaq9jKBm2tSmOKky7ZHIXzGvkVPXCSn6jkpziBPZdGFs8Tw==}
     engines: {node: '>=12'}
+    hasBin: true
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -946,7 +947,7 @@ snapshots:
 
   destroy@1.2.0: {}
 
-  dotenv@16.4.7: {}
+  dotenv@18.0.9: {}
 
   ee-first@1.1.1: {}
 
